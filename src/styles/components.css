@@ -1,0 +1,255 @@
+/* ==========================================================================
+   Componentes reutilizables — pestañas de navegación, botones, paneles,
+   insignias de estado, divisores ornamentales.
+   ========================================================================== */
+
+/* -- Foco accesible, consistente en todo el proyecto -- */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* -- Pestañas de navegación principal -- */
+.nav-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: var(--border-subtle);
+  background: rgba(18, 23, 40, 0.6);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: border-color var(--duration-base) var(--ease-standard),
+    color var(--duration-base) var(--ease-standard),
+    background var(--duration-base) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.nav-tab:hover {
+  color: var(--color-silver-bright);
+  border-color: rgba(185, 151, 47, 0.45);
+}
+
+.nav-tab[aria-selected='true'] {
+  color: var(--color-gold-bright);
+  border: var(--border-gold-strong);
+  background: rgba(185, 151, 47, 0.12);
+  box-shadow: var(--glow-gold);
+}
+
+.nav-tab:active {
+  transform: translateY(1px);
+}
+
+.nav-tab__icon {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.85;
+}
+
+.nav-tab__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* -- Botón de sonido -- */
+.sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: var(--border-subtle);
+  background: rgba(18, 23, 40, 0.6);
+  transition: border-color var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.sound-toggle:hover {
+  border-color: rgba(185, 151, 47, 0.5);
+}
+
+.sound-toggle[aria-pressed='true'] {
+  border: var(--border-gold-strong);
+  box-shadow: var(--glow-gold);
+}
+
+.sound-toggle__icon {
+  position: relative;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.sound-toggle__icon::before,
+.sound-toggle__icon::after {
+  content: '';
+  position: absolute;
+  border-color: var(--color-silver);
+}
+
+.sound-toggle__icon::before {
+  left: 0;
+  top: 35%;
+  width: 0.5rem;
+  height: 0.3rem;
+  background: var(--color-silver);
+  clip-path: polygon(0% 25%, 50% 25%, 100% 0%, 100% 100%, 50% 75%, 0% 75%);
+}
+
+.sound-toggle__icon::after {
+  right: -0.1rem;
+  top: 0.15rem;
+  width: 0.4rem;
+  height: 0.8rem;
+  border: 1.5px solid var(--color-silver);
+  border-left: none;
+  border-radius: 0 999px 999px 0;
+  opacity: 0.9;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+
+.sound-toggle[aria-pressed='false'] .sound-toggle__icon::after {
+  opacity: 0.25;
+}
+
+/* -- Paneles -- */
+.panel {
+  position: relative;
+  background: var(--surface-panel);
+  border: var(--border-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+  padding: var(--space-6);
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(160deg, rgba(216, 184, 90, 0.25), transparent 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* -- Divisor ornamental -- */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+  color: var(--color-gold-dim);
+}
+
+.ornament-divider::before,
+.ornament-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+}
+
+/* -- Insignias de estado -- */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status-badge--pending {
+  color: var(--color-parchment-dim);
+  border: 1px dashed rgba(201, 187, 156, 0.5);
+}
+
+.status-badge--locked {
+  color: var(--color-silver);
+  border: var(--border-subtle);
+  background: rgba(46, 78, 140, 0.15);
+}
+
+.status-badge--ready {
+  color: var(--color-success);
+  border: 1px solid rgba(90, 155, 114, 0.5);
+}
+
+/* -- Botón ornamental genérico -- */
+.btn-arcane {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  border: var(--border-gold);
+  background: rgba(185, 151, 47, 0.08);
+  color: var(--color-gold-bright);
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  transition: background var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.btn-arcane:hover {
+  background: rgba(185, 151, 47, 0.16);
+  box-shadow: var(--glow-gold);
+}
+
+/* -- Enlace discreto (carta de bienvenida, etc.) -- */
+.link-discreet {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  letter-spacing: 0.03em;
+  border-bottom: 1px dotted transparent;
+  transition: color var(--duration-base) var(--ease-standard),
+    border-color var(--duration-base) var(--ease-standard);
+}
+
+.link-discreet__icon {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.8;
+}
+
+.link-discreet__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.link-discreet:hover,
+.link-discreet:focus-visible {
+  color: var(--color-gold-bright);
+  border-color: rgba(216, 184, 90, 0.5);
+}
+
+/* -- Estados deshabilitados -- */
+[disabled],
+[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* -- Capa decorativa: nunca debe interceptar clics -- */
+[data-decorative] {
+  pointer-events: none;
+}

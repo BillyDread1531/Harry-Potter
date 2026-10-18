@@ -1,0 +1,15 @@
+{
+  "name": "hogwarts-cumpleanos",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Experiencia interactiva de cumpleanos con tematica de Harry Potter - Fase 1: Fundacion",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
+}

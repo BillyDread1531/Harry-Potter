@@ -1,0 +1,77 @@
+/* ==========================================================================
+   Ambiente mágico — velas suspendidas, partículas y resplandores.
+   Todo dentro de capas decorativas que nunca bloquean la interacción.
+   ========================================================================== */
+
+.candle {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+  animation: candle-sway calc(6s * var(--sway-speed, 1)) ease-in-out infinite;
+  animation-play-state: running;
+}
+
+.candle__flame {
+  width: 0.55rem;
+  height: 0.85rem;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 50% 30%, #fff3d0, var(--color-gold-bright) 55%, transparent 80%);
+  box-shadow: 0 0 10px 3px rgba(216, 184, 90, 0.55), 0 0 22px 6px rgba(216, 184, 90, 0.25);
+  animation: candle-flicker 2.4s ease-in-out infinite;
+}
+
+.candle__wax {
+  width: 0.4rem;
+  height: 1.6rem;
+  margin-top: -0.1rem;
+  background: linear-gradient(180deg, var(--color-parchment) 0%, var(--color-parchment-dim) 100%);
+  border-radius: 1px;
+}
+
+.candle__string {
+  position: absolute;
+  top: -3.2rem;
+  width: 1px;
+  height: 3.2rem;
+  background: linear-gradient(180deg, transparent, rgba(195, 206, 219, 0.25));
+}
+
+.mote {
+  position: absolute;
+  width: var(--mote-size, 3px);
+  height: var(--mote-size, 3px);
+  border-radius: 50%;
+  background: var(--color-gold-bright);
+  box-shadow: 0 0 6px 1px rgba(216, 184, 90, 0.6);
+  opacity: 0;
+  animation: mote-drift var(--mote-duration, 14s) linear infinite;
+  animation-delay: var(--mote-delay, 0s);
+}
+
+.mote--silver {
+  background: var(--color-silver-bright);
+  box-shadow: 0 0 6px 1px rgba(199, 206, 219, 0.6);
+}
+
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.35;
+  animation: glow-breathe 9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .candle,
+  .candle__flame,
+  .mote,
+  .glow-orb {
+    animation: none !important;
+  }
+
+  .mote {
+    opacity: 0.4;
+  }
+}

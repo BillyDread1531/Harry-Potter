@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="Una aventura mágica y personal dentro de los muros de Hogwarts."
+    />
+    <title>El Vestíbulo — Una aventura en Hogwarts</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#vista-principal">Saltar al contenido principal</a>
+
+    <div class="castle-frame">
+      <div class="ambient-layer" aria-hidden="true" data-ambient-layer></div>
+
+      <header class="site-header">
+        <div class="site-header__brand">
+          <span class="site-header__sigil" aria-hidden="true">✦</span>
+          <p class="site-header__title">
+            <span class="site-header__title-main">Hogwarts</span>
+            <span class="site-header__title-sub">una invitación privada</span>
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="sound-toggle"
+          data-sound-toggle
+          aria-pressed="false"
+          aria-label="Activar sonido ambiental"
+        >
+          <span class="sound-toggle__icon" aria-hidden="true"></span>
+        </button>
+      </header>
+
+      <nav class="main-nav" aria-label="Secciones del castillo" data-main-nav>
+        <ul class="main-nav__list" role="tablist" aria-label="Secciones del castillo" data-tablist>
+          <!-- Los elementos de navegación se generan dinámicamente desde src/data/sections.js -->
+        </ul>
+      </nav>
+
+      <main id="vista-principal" class="view-stage" data-view-stage tabindex="-1">
+        <!-- Las vistas (tabpanels) se generan dinámicamente según la sección activa -->
+      </main>
+
+      <p class="view-status" role="status" aria-live="polite" data-view-status></p>
+    </div>
+
+    <noscript>
+      <p class="noscript-warning">
+        Esta experiencia requiere JavaScript para revelar sus secretos. Por favor habilita
+        JavaScript en tu navegador.
+      </p>
+    </noscript>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

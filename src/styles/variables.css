@@ -1,0 +1,129 @@
+/* ==========================================================================
+   Tokens de diseño — paleta, tipografía, espaciado, bordes, sombras, tiempos.
+   Toda la identidad visual del proyecto se controla desde aquí.
+   ========================================================================== */
+
+:root {
+  /* -- Color: superficies nocturnas -- */
+  --color-void: #06070d;
+  --color-night: #0b0e1a;
+  --color-night-mid: #121728;
+  --color-night-high: #1a2038;
+  --color-navy-deep: #16213b;
+  --color-violet-deep: #201830;
+  --color-violet-mid: #2a2240;
+
+  /* -- Color: metales y magia -- */
+  --color-gold: #b9972f;
+  --color-gold-bright: #d8b85a;
+  --color-gold-dim: #7a642a;
+  --color-silver: #c3cedb;
+  --color-silver-bright: #e7edf4;
+  --color-bronze: #8c6a3f;
+
+  /* -- Color: acentos de casa (uso discreto) -- */
+  --color-ravenclaw-blue: #2e4e8c;
+  --color-ravenclaw-blue-bright: #4d6fb3;
+
+  /* -- Color: materiales cálidos -- */
+  --color-parchment: #e8dcc3;
+  --color-parchment-dim: #c9bb9c;
+
+  /* -- Color: texto -- */
+  --color-text-primary: var(--color-silver-bright);
+  --color-text-secondary: #a8b3c7;
+  --color-text-muted: #767f94;
+  --color-text-on-parchment: #2a2013;
+  --color-text-link: var(--color-gold-bright);
+
+  /* -- Color: estado -- */
+  --color-focus-ring: var(--color-gold-bright);
+  --color-danger: #b35050;
+  --color-success: #5a9b72;
+
+  /* -- Superficies compuestas -- */
+  --surface-panel: linear-gradient(
+    160deg,
+    var(--color-night-mid) 0%,
+    var(--color-navy-deep) 60%,
+    var(--color-violet-deep) 100%
+  );
+  --surface-app-bg: radial-gradient(
+      circle at 50% -10%,
+      rgba(77, 111, 179, 0.1),
+      transparent 55%
+    ),
+    linear-gradient(180deg, var(--color-void) 0%, var(--color-night) 45%, var(--color-night-mid) 100%);
+
+  /* -- Bordes -- */
+  --border-gold: 1px solid rgba(185, 151, 47, 0.55);
+  --border-gold-strong: 1px solid rgba(216, 184, 90, 0.75);
+  --border-subtle: 1px solid rgba(195, 206, 219, 0.14);
+
+  /* -- Radios -- */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  /* -- Sombras y resplandores -- */
+  --shadow-panel: 0 18px 50px rgba(2, 3, 8, 0.55);
+  --glow-gold: 0 0 18px rgba(216, 184, 90, 0.35);
+  --glow-silver: 0 0 14px rgba(199, 206, 219, 0.4);
+
+  /* -- Espaciado (escala base 4px) -- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  /* -- Tipografía -- */
+  --font-display: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, 'Times New Roman', serif;
+  --font-body: 'Segoe UI', system-ui, -apple-system, 'Trebuchet MS', Verdana, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.875rem;
+  --text-2xl: 2.5rem;
+  --text-3xl: 3.25rem;
+
+  /* -- Capas (z-index) -- */
+  --z-ambient: 0;
+  --z-content: 10;
+  --z-header: 20;
+  --z-nav: 20;
+  --z-overlay: 40;
+
+  /* -- Transiciones -- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 280ms;
+  --duration-slow: 600ms;
+
+  /* -- Layout -- */
+  --max-content-width: 1180px;
+  --nav-height: 4rem;
+}
+
+/* Base para que las fases futuras activen/desactiven el ambiente mágico */
+:root {
+  --ambient-opacity: 1;
+  --ambient-motion-scale: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ambient-motion-scale: 0;
+  }
+}
+
+:root[data-ambient='off'] {
+  --ambient-opacity: 0;
+}

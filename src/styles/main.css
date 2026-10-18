@@ -1,0 +1,15 @@
+/* ==========================================================================
+   Punto de entrada de estilos — el orden de importación es intencional:
+   tokens, luego reinicio, luego capas de diseño generales, luego
+   componentes y vistas específicas.
+   ========================================================================== */
+
+@import './variables.css';
+@import './reset.css';
+@import './typography.css';
+@import './layout.css';
+@import './components.css';
+@import './ambient.css';
+@import './animations.css';
+@import './sections.css';
+@import './responsive.css';

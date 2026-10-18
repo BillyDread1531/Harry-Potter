@@ -1,0 +1,96 @@
+/* ==========================================================================
+   Animaciones — definiciones de keyframes y utilidades de transición.
+   Todas respetan prefers-reduced-motion (ver reset.css y ambient.css).
+   ========================================================================== */
+
+@keyframes candle-sway {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(calc(4px * var(--ambient-motion-scale, 1))) rotate(1deg);
+  }
+}
+
+@keyframes candle-flicker {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  30% {
+    opacity: 0.85;
+    transform: scaleY(0.92);
+  }
+  55% {
+    opacity: 1;
+    transform: scaleY(1.05);
+  }
+  80% {
+    opacity: 0.9;
+    transform: scaleY(0.97);
+  }
+}
+
+@keyframes mote-drift {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--mote-drift-x, 20px), var(--mote-drift-y, -120px));
+  }
+}
+
+@keyframes glow-breathe {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes sigil-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    filter: drop-shadow(0 0 4px rgba(216, 184, 90, 0.3));
+  }
+  50% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(216, 184, 90, 0.55));
+  }
+}
+
+@keyframes view-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.view-panel {
+  animation: view-enter var(--duration-slow) var(--ease-standard) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-panel {
+    animation: none;
+  }
+}
