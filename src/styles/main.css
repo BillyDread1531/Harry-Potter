@@ -8,8 +8,14 @@
 @import './reset.css';
 @import './typography.css';
 @import './layout.css';
+@import './chrome.css';
 @import './components.css';
 @import './ambient.css';
 @import './animations.css';
-@import './sections.css';
+@import './scene.css';
+@import './calendar.css';
+@import './mothLock.css';
+@import './miniGames.css';
+@import './vestibulo.css';
+@import './transitions.css';
 @import './responsive.css';

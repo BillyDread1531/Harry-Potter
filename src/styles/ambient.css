@@ -55,19 +55,10 @@
   box-shadow: 0 0 6px 1px rgba(199, 206, 219, 0.6);
 }
 
-.glow-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(40px);
-  opacity: 0.35;
-  animation: glow-breathe 9s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .candle,
   .candle__flame,
-  .mote,
-  .glow-orb {
+  .mote {
     animation: none !important;
   }
 

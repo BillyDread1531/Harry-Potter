@@ -1,97 +1,89 @@
 /**
- * Configuración de navegación y contenido provisional de cada sección.
- * Fase 2+ sustituirá `pendingNote`/`pendingItems` por las vistas definitivas
- * sin tener que tocar el router ni la navegación.
+ * Configuración de los lugares del castillo. Cada sección describe un
+ * destino alcanzable desde el vestíbulo mediante una interacción del
+ * mundo (no una pestaña), con la variante de transición cinematográfica
+ * que debe reproducirse al entrar.
+ *
+ * `hidden: true` significa que el lugar existe en la arquitectura pero
+ * todavía no se revela en la interfaz ni es alcanzable por navegación
+ * directa: así queda preparado el Pensadero para una fase posterior
+ * sin anunciar su existencia ahora.
  */
 
 export const SECTIONS = [
   {
     id: 'vestibulo',
     label: 'Vestíbulo',
-    icon: 'hall',
     kind: 'vestibulo',
-    title: 'El Vestíbulo de Hogwarts',
-    status: 'ready'
+    title: 'El Vestíbulo'
   },
   {
     id: 'expedientes',
     label: 'Expedientes',
+    kind: 'scene',
     icon: 'scroll',
-    kind: 'pending',
+    transitionVariant: 'unfurl',
     title: 'Los Expedientes',
-    status: 'pending',
+    eyebrow: 'Un escritorio a oscuras',
     description:
-      'Aquí vivirán los quince expedientes fechados, uno por cada noche hasta el 15 de noviembre de 2026. Cada expediente guardará un acertijo, una pista del castillo y un fragmento de la historia.',
-    pendingItems: [
-      'Quince expedientes, uno por día, del 1 al 15 de noviembre de 2026.',
-      'Acertijos funcionales con validación de respuestas.',
-      'Progreso guardado para no perder lo ya descubierto.'
-    ]
+      'Un escritorio de roble espera los quince expedientes fechados, uno por cada noche hasta el 15 de noviembre de 2026. Algunos ya están disponibles — otros aún aguardan su fecha.',
+    pendingItems: []
   },
   {
     id: 'mapa',
     label: 'Mapa del castillo',
+    kind: 'scene',
     icon: 'map',
-    kind: 'pending',
+    transitionVariant: 'unfurl',
     title: 'El Mapa del Castillo',
-    status: 'pending',
+    eyebrow: 'Un pergamino que empieza a despertar',
     description:
-      'Un mapa vivo del castillo, pensado para moverse entre sus salas y descubrir rincones ocultos a medida que avance la aventura.',
-    pendingItems: [
-      'Navegación espacial entre salas y pasillos.',
-      'Zonas que se desbloquean según el progreso.',
-      'Detalles interactivos inspirados en el mapa del merodeador.'
-    ]
+      'Sobre la mesa, el pergamino ya reconoce algunos rincones del castillo. Tócalos para ver qué revelan — algunos todavía esperan a que avances más en los expedientes.',
+    pendingItems: []
   },
   {
     id: 'biblioteca',
     label: 'Biblioteca',
+    kind: 'scene',
     icon: 'book',
-    kind: 'pending',
+    transitionVariant: 'door',
     title: 'La Biblioteca',
-    status: 'pending',
+    eyebrow: 'Estanterías que llegan al techo',
     description:
-      'Un rincón tranquilo con curiosidades y conocimiento del mundo mágico, para leer entre acertijo y acertijo.',
-    pendingItems: [
-      'Fichas de curiosidades del mundo mágico.',
-      'Contenido ampliable sin rehacer la estructura.'
-    ]
+      'El polvo flota bajo la luz cálida de las lámparas. Entre estos volúmenes ya esperan algunas curiosidades del mundo mágico — otras solo aparecerán conforme avances.',
+    pendingItems: []
   },
   {
     id: 'desafios',
-    label: 'Sala de desafíos',
+    label: 'Sala de los Menesteres',
+    kind: 'scene',
     icon: 'wand',
-    kind: 'pending',
-    title: 'La Sala de Desafíos',
-    status: 'pending',
+    transitionVariant: 'wallShift',
+    title: 'Sala de los Menesteres',
+    eyebrow: 'La pared recuerda lo que necesitas',
     description:
-      'Minijuegos opcionales para quienes quieran ir más allá de los expedientes principales.',
-    pendingItems: ['Minijuegos cortos y opcionales.', 'Sin impacto obligatorio en la historia principal.']
+      'La sala cambia con lo que ya has recorrido: algunas noches apenas una vela, otras bastante más. Hay algo aquí dentro que todavía no es lo que parece.',
+    pendingItems: []
   },
   {
     id: 'archivo',
     label: 'Archivo secreto',
+    kind: 'scene',
     icon: 'key',
-    kind: 'pending',
+    transitionVariant: 'revealPanel',
     title: 'El Archivo Secreto',
-    status: 'pending',
-    description:
-      'El lugar donde vivirán la carta de bienvenida, las instrucciones de la aventura y los secretos que se vayan descubriendo.',
-    pendingItems: [
-      'Carta cinematográfica de bienvenida.',
-      'Instrucciones completas de la aventura.',
-      'Registro de secretos descubiertos.'
-    ]
+    eyebrow: 'Una cerradura muy antigua',
+    description: 'Detrás de este compartimento se guardan los secretos que ya has descubierto.',
+    pendingItems: []
   },
   {
     id: 'pensadero',
     label: 'Pensadero',
+    kind: 'scene',
     icon: 'basin',
-    kind: 'pensadero',
+    transitionVariant: 'fade-dust',
     title: 'El Pensadero',
-    status: 'locked',
-    description:
-      'Un recuerdo sellado hasta la noche final, cuando el castillo esté listo para mostrarlo.',
+    hidden: true,
     unlockLabel: '15 de noviembre de 2026 · 8:00 p. m. (hora de Guatemala)'
   }
 ];
@@ -100,4 +92,9 @@ export const DEFAULT_SECTION_ID = 'vestibulo';
 
 export function getSectionById(id) {
   return SECTIONS.find((section) => section.id === id);
+}
+
+export function isReachable(id) {
+  const section = getSectionById(id);
+  return Boolean(section) && !section.hidden;
 }

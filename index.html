@@ -14,41 +14,38 @@
   </head>
   <body>
     <a class="skip-link" href="#vista-principal">Saltar al contenido principal</a>
+    <h1 class="visually-hidden">Hogwarts — una invitación privada</h1>
 
     <div class="castle-frame">
-      <div class="ambient-layer" aria-hidden="true" data-ambient-layer></div>
-
-      <header class="site-header">
-        <div class="site-header__brand">
-          <span class="site-header__sigil" aria-hidden="true">✦</span>
-          <p class="site-header__title">
-            <span class="site-header__title-main">Hogwarts</span>
-            <span class="site-header__title-sub">una invitación privada</span>
-          </p>
-        </div>
+      <div class="world-chrome">
+        <button
+          type="button"
+          class="chrome-btn chrome-btn--home"
+          data-home-control
+          aria-label="Volver al vestíbulo"
+          hidden
+        >
+          <span class="chrome-btn__icon" aria-hidden="true" data-home-icon></span>
+        </button>
 
         <button
           type="button"
-          class="sound-toggle"
+          class="chrome-btn chrome-btn--sound sound-toggle"
           data-sound-toggle
           aria-pressed="false"
           aria-label="Activar sonido ambiental"
         >
           <span class="sound-toggle__icon" aria-hidden="true"></span>
         </button>
-      </header>
-
-      <nav class="main-nav" aria-label="Secciones del castillo" data-main-nav>
-        <ul class="main-nav__list" role="tablist" aria-label="Secciones del castillo" data-tablist>
-          <!-- Los elementos de navegación se generan dinámicamente desde src/data/sections.js -->
-        </ul>
-      </nav>
+      </div>
 
       <main id="vista-principal" class="view-stage" data-view-stage tabindex="-1">
-        <!-- Las vistas (tabpanels) se generan dinámicamente según la sección activa -->
+        <!-- Las escenas se generan dinámicamente según el lugar activo -->
       </main>
 
       <p class="view-status" role="status" aria-live="polite" data-view-status></p>
+
+      <div class="t-overlay" aria-hidden="true" data-transition-overlay></div>
     </div>
 
     <noscript>

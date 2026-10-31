@@ -1,0 +1,562 @@
+/* ==========================================================================
+   El Vestíbulo — composición por capas en primera persona, a pantalla
+   completa (sin borde ni recuadro: es un lugar, no una tarjeta flotando
+   sobre el fondo de la página), preparada para sustituir progresivamente
+   el arte procedimental (SVG/CSS) por recursos cinematográficos
+   definitivos sin rehacer la estructura.
+
+   Orden de capas (de atrás hacia adelante):
+     0  ventana/cielo procedimental      (respaldo, siempre presente)
+     1  columnas/suelo procedimental     (respaldo, siempre presente)
+     2  fondo fotográfico                (cubre 0 y 1 en cuanto carga)
+     3  arquitectura transparente        (preparada, vacía por ahora)
+     4  iluminación                      (preparada, vacía por ahora)
+     5  niebla
+     6  velas
+     7  destellos/partículas             (por encima de la foto, no detrás)
+     9  objetos interactivos (hotspots, z-index global en scene.css)
+     10 criaturas mágicas (p. ej. Patronus)
+   ========================================================================== */
+
+.vestibulo-scene {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--color-void);
+  isolation: isolate;
+}
+
+.vestibulo-scene__layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.vestibulo-scene__layer svg {
+  width: 100%;
+  height: 100%;
+}
+
+.vestibulo-scene__layer--window {
+  z-index: 0;
+}
+
+.vestibulo-scene__layer--hall {
+  z-index: 1;
+}
+
+/* -- Fondo fotográfico: `.scene-photo` y `.has-photo-background` están
+      definidos de forma genérica en `scene.css` (los usa cualquier
+      escena); aquí solo se ajusta su z-index para encajar en la pila
+      de capas propia del vestíbulo (por encima de --window y --hall) -- */
+.vestibulo-scene > .scene-photo {
+  z-index: 2;
+}
+
+/* -- Ambientación según la hora real de Guatemala (ver
+      `calendar/guatemalaTime.isNightInGuatemala`, usado en
+      `vestibuloScene.js`): un lavado de color muy sutil, pensado para
+      notarse incluso cuando el fondo fotográfico ya cargó y cubre la
+      ventana procedimental de abajo (por eso va DESPUÉS de `.scene-photo`
+      en el marcado, con el mismo z-index: entre elementos hermanos con
+      igual z-index, el orden del DOM decide cuál queda encima). Nunca
+      bloquea nada (`pointer-events: none`) y el cambio en sí no anima —
+      es ambientación discreta, no un efecto que deba respetar
+      `prefers-reduced-motion`. -- */
+.vestibulo-scene__time-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+.vestibulo-scene__time-tint--day {
+  background: radial-gradient(ellipse at 50% 15%, rgba(255, 221, 161, 0.3) 0%, rgba(255, 221, 161, 0) 55%);
+}
+
+.vestibulo-scene__time-tint--night {
+  background: radial-gradient(ellipse at 50% 15%, rgba(120, 150, 220, 0.16) 0%, rgba(120, 150, 220, 0) 55%);
+}
+
+/* -- Arquitectura transparente e iluminación: capas preparadas, vacías
+      hasta que se les añadan recursos en `public/assets/` -- */
+.vestibulo-scene__layer--architecture {
+  z-index: 3;
+}
+
+/* Capa reservada desde el principio para iluminación, antes vacía:
+   un resplandor cálido que se desplaza muy despacio por el techo, como
+   si la luz de una antorcha lejana (o el propio castillo) respirara.
+   `background-position` es una propiedad estándar animable, así que
+   interpola con suavidad sin necesitar registrar la variable con
+   `@property`. */
+.vestibulo-scene__layer--lighting {
+  z-index: 4;
+  background-image: radial-gradient(circle, rgba(216, 184, 90, 0.09) 0%, transparent 62%);
+  background-size: 170% 170%;
+  background-repeat: no-repeat;
+  animation: vestibulo-light-drift 26s ease-in-out infinite;
+}
+
+@keyframes vestibulo-light-drift {
+  0%,
+  100% {
+    background-position: 18% 12%;
+  }
+  50% {
+    background-position: 74% 28%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vestibulo-scene__layer--lighting {
+    animation: none;
+    background-position: 40% 18%;
+  }
+}
+
+.vestibulo-scene__fog {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: var(--ambient-opacity);
+}
+
+.vestibulo-scene__fog-blob {
+  position: absolute;
+  bottom: -10%;
+  width: 60%;
+  height: 40%;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.22;
+  background: radial-gradient(circle, rgba(46, 78, 140, 0.55), transparent 70%);
+  animation: fog-drift 22s ease-in-out infinite;
+}
+
+.vestibulo-scene__fog-blob--a {
+  left: -10%;
+}
+
+.vestibulo-scene__fog-blob--b {
+  right: -10%;
+  animation-duration: 26s;
+  animation-delay: -6s;
+  background: radial-gradient(circle, rgba(185, 151, 47, 0.3), transparent 70%);
+}
+
+@keyframes fog-drift {
+  0%,
+  100% {
+    transform: translateX(0) scaleX(1);
+  }
+  50% {
+    transform: translateX(6%) scaleX(1.06);
+  }
+}
+
+.vestibulo-scene__candles {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* El fondo fotográfico ya trae sus propias velas suspendidas: evita
+   duplicarlas superponiendo las procedimentales encima. */
+.vestibulo-scene.has-photo-background .vestibulo-scene__candles {
+  display: none;
+}
+
+/* -- Destellos: la misma capa que el resto del mundo (scene.css usa el
+      mismo patrón), por encima de la foto y las velas, no una capa de
+      página aparte detrás del recuadro -- */
+.vestibulo-scene__sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+/* -- Criaturas mágicas (creature.js): posición preparada para el
+      Patronus; permanece oculta mientras no haya recursos -- */
+.vestibulo-scene__creatures {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.vestibulo-scene__creatures .creature {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: 18%;
+  max-width: 220px;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+}
+
+/* -- Posiciones de los puntos interactivos -- */
+.vestibulo-scene__hotspot {
+  transform: translate(-50%, -50%);
+}
+
+/* -- Rincones que ya no deberían sentirse "escondidos": los cuatro
+      destinos (Biblioteca, Archivo, Expedientes, Mapa) y las
+      instrucciones llevan siempre una pequeña insignia con su icono,
+      visible sin tocar — a diferencia del muro de la Sala de los
+      Menesteres (`hotspot--mystery`), que sigue siendo, a propósito,
+      el único rincón sin ninguna pista visual previa. El nombre
+      completo (`.hotspot__caption`, la pastilla de texto) sigue
+      apareciendo solo al tocar: mostrarlo siempre desbordaba la
+      pantalla en los extremos y chocaba con las insignias vecinas. -- */
+.hotspot__badge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.vestibulo-scene__hotspot:not(.hotspot--mystery) .hotspot__badge {
+  opacity: 1;
+}
+
+.hotspot__badge-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: rgba(7, 9, 16, 0.75);
+  border: 1px solid rgba(216, 184, 90, 0.55);
+  color: var(--color-gold-bright);
+}
+
+.vestibulo-scene__hotspot--biblioteca {
+  left: 16%;
+  top: 42%;
+}
+
+.vestibulo-scene__hotspot--archivo {
+  left: 83%;
+  top: 42%;
+}
+
+.vestibulo-scene__hotspot--expedientes {
+  left: 13%;
+  top: 80%;
+}
+
+.vestibulo-scene__hotspot--mapa {
+  left: 50%;
+  top: 89%;
+}
+
+.vestibulo-scene__hotspot--desafios {
+  left: 88%;
+  top: 76%;
+}
+
+.vestibulo-scene__hotspot--patronus-glint {
+  left: 58%;
+  top: 23%;
+}
+
+.vestibulo-scene__hotspot--letter {
+  left: 25%;
+  top: 72%;
+}
+
+.vestibulo-scene__hotspot--instructions {
+  left: 75%;
+  top: 72%;
+}
+
+/* -- El sobre, dibujado en SVG dentro del propio hotspot (ver
+      `createEnvelopeMarkup` en vestibuloScene.js) -- */
+.letter-envelope {
+  width: 1.9rem;
+  height: 1.45rem;
+  display: block;
+}
+
+/* -- Sin leer: más luminoso y con un pulso lento que invita a
+      encontrarla. Leída: el mismo lugar, pero discreto, como el resto
+      de los hotspots "mystery" — se puede volver a abrir, pero ya no
+      reclama la atención. -- */
+.vestibulo-scene__hotspot--letter:not(.vestibulo-scene__hotspot--letter-read) .hotspot__glow {
+  animation: hotspot-breathe 3.2s ease-in-out infinite;
+}
+
+.vestibulo-scene__hotspot--letter-read .hotspot__glow {
+  opacity: 0.12;
+  animation: hotspot-breathe-faint 7s ease-in-out infinite;
+}
+
+.vestibulo-scene__hotspot--letter-read:hover .hotspot__glow,
+.vestibulo-scene__hotspot--letter-read:focus-visible .hotspot__glow {
+  opacity: 1;
+  animation-play-state: paused;
+}
+
+/* -- Retrato antiguo (creature.js, igual que el Patronus): un marco
+      con proporciones propias (432×578, no 1:1), colocado en el mismo
+      punto que su hotspot de arriba. Permanece oculto por completo si
+      el recurso todavía no existe (lo decide `mountCreature`). -- */
+.vestibulo-scene__portrait-frame {
+  position: absolute;
+  left: 58%;
+  top: 23%;
+  width: 13%;
+  max-width: 160px;
+  aspect-ratio: 432 / 578;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.55));
+}
+
+.vestibulo-scene__portrait-frame--awake {
+  animation: portrait-awake 1.4s ease-out;
+}
+
+@keyframes portrait-awake {
+  0% {
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.55)) brightness(1);
+  }
+  30% {
+    filter: drop-shadow(0 6px 22px rgba(216, 184, 90, 0.55)) brightness(1.25);
+  }
+  100% {
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.55)) brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vestibulo-scene__portrait-frame--awake {
+    animation: none;
+  }
+}
+
+/* -- La lechuza: mismo patrón que el retrato (criatura + hotspot
+      independiente, para que la interacción funcione aunque el
+      recurso gráfico todavía no exista). Reutiliza `portrait-awake`
+      (ya definida arriba) para su propia reacción al tocarla. -- */
+.vestibulo-scene__owl {
+  position: absolute;
+  left: 49%;
+  top: 29%;
+  width: 7%;
+  max-width: 90px;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+  pointer-events: none;
+}
+
+.vestibulo-scene__owl--awake {
+  animation: portrait-awake 1.4s ease-out;
+}
+
+.vestibulo-scene__hotspot--owl {
+  left: 49%;
+  top: 29%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vestibulo-scene__owl--awake {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .vestibulo-scene__owl {
+    left: 50%;
+    top: 26%;
+    width: 11%;
+  }
+
+  .vestibulo-scene__hotspot--owl {
+    left: 50%;
+    top: 26%;
+  }
+}
+
+/* -- Vida ambiental contextual: una polilla que, de vez en cuando,
+      cruza el vestíbulo de lado a lado (ver `vestibuloScene.js`).
+      Puramente decorativa (`pointer-events: none`, nunca intercepta
+      hotspots), oculta por defecto y solo visible durante el cruce. -- */
+.vestibulo-scene__moth-crossing {
+  position: absolute;
+  left: -8%;
+  top: 55%;
+  width: 4%;
+  max-width: 48px;
+  aspect-ratio: 1 / 1;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.vestibulo-scene__moth-crossing--active {
+  animation: moth-crossing 6s linear;
+}
+
+/* Un vaivén vertical suave se suma a la travesía diagonal, para que se
+   sienta como una polilla volando (sube y baja al avanzar), no como un
+   sprite deslizándose en línea recta. */
+@keyframes moth-crossing {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  8% {
+    opacity: 0.9;
+  }
+  30% {
+    transform: translate(35vw, -8vh);
+  }
+  50% {
+    transform: translate(59vw, -2vh);
+  }
+  70% {
+    transform: translate(83vw, -9vh);
+  }
+  92% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(118vw, -6vh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vestibulo-scene__moth-crossing--active {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* -- «La corriente fría» (ver `discoveries/coldDraftContent.js` y
+      `scenes/vestibuloScene.js`): un overlay propio, independiente de
+      `.vestibulo-scene__candles` (que `has-photo-background` oculta
+      por completo cuando la foto real ya cargó, ver más arriba) — así
+      la manifestación ambiental y su resolución permanente se ven
+      siempre, cargue o no la foto. Mismo z-index que `.scene-photo`
+      pero DESPUÉS en el marcado, igual que `.vestibulo-scene__time-tint`. -- */
+.vestibulo-scene__draft-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+  background: radial-gradient(ellipse at 50% 30%, rgba(150, 190, 230, 0.22) 0%, rgba(150, 190, 230, 0) 65%);
+}
+
+.vestibulo-scene__draft-overlay--flicker {
+  opacity: 1;
+}
+
+.vestibulo-scene__draft-overlay--resolved {
+  opacity: 1;
+  transition: none;
+  background: radial-gradient(ellipse at 50% 30%, rgba(216, 184, 90, 0.1) 0%, rgba(216, 184, 90, 0) 65%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vestibulo-scene__draft-overlay {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vestibulo-scene__fog-blob {
+    animation: none;
+  }
+  .vestibulo-scene__hotspot--letter:not(.vestibulo-scene__hotspot--letter-read) .hotspot__glow,
+  .vestibulo-scene__hotspot--letter-read .hotspot__glow {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Las nueve posiciones de abajo se rediseñaron juntas (no una por
+     una) tras revisar la foto `vestibule-mobile.jpg` a resolución
+     completa: con el ancho mínimo táctil (44px + el halo del glow) la
+     distancia entre dos puntos cualesquiera necesita quedar por encima
+     de ~18-20% de pantalla para no fundirse visualmente ni competir
+     por el mismo toque. Antes, "expedientes"+"letter" y "desafíos"+
+     "instrucciones" quedaban a 6-8%, uno prácticamente encima del
+     otro. */
+  .vestibulo-scene__hotspot--letter {
+    left: 30%;
+    top: 90%;
+  }
+
+  .vestibulo-scene__hotspot--instructions {
+    left: 70%;
+    top: 90%;
+  }
+
+  .vestibulo-scene__hotspot--biblioteca {
+    left: 15%;
+    top: 54%;
+  }
+
+  .vestibulo-scene__hotspot--archivo {
+    left: 80%;
+    top: 36%;
+  }
+
+  .vestibulo-scene__hotspot--expedientes {
+    left: 15%;
+    top: 78%;
+  }
+
+  .vestibulo-scene__hotspot--mapa {
+    left: 50%;
+    top: 90%;
+  }
+
+  .vestibulo-scene__hotspot--desafios {
+    left: 85%;
+    top: 78%;
+  }
+
+  /* El retrato: en la foto móvil hay una ventana real a cada lado,
+     arriba (hasta ~45-50% de alto); colgarlo ahí hacía que pareciera
+     flotar en el cristal en vez de estar montado en la pared. Se baja
+     a la columna de piedra sólida, por debajo de la ventana, cerca de
+     donde ya cuelga un candelabro de pared (mismo tipo de superficie,
+     no un hueco de luz). */
+  .vestibulo-scene__hotspot--patronus-glint {
+    left: 85%;
+    top: 62%;
+  }
+
+  .vestibulo-scene__portrait-frame {
+    left: 85%;
+    top: 62%;
+    width: 15%;
+  }
+
+  /* El ancho del Patronus se reduce un poco más en móvil (la posición
+     base ya se corrigió arriba, en la regla sin media query, porque el
+     choque con el retrato también ocurría en escritorio). */
+  .vestibulo-scene__creatures .creature {
+    left: 50%;
+    top: 55%;
+    width: 15%;
+  }
+}

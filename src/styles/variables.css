@@ -95,11 +95,10 @@
   --text-3xl: 3.25rem;
 
   /* -- Capas (z-index) -- */
-  --z-ambient: 0;
   --z-content: 10;
-  --z-header: 20;
-  --z-nav: 20;
+  --z-chrome: 20;
   --z-overlay: 40;
+  --z-transition: 50;
 
   /* -- Transiciones -- */
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);

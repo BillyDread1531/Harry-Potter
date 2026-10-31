@@ -50,18 +50,6 @@
   }
 }
 
-@keyframes glow-breathe {
-  0%,
-  100% {
-    opacity: 0.25;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(1.08);
-  }
-}
-
 @keyframes sigil-pulse {
   0%,
   100% {

@@ -21,23 +21,3 @@ export function createSigilMarkup({ title = '' } = {}) {
     </svg>
   `;
 }
-
-/**
- * Sello circular usado en el panel bloqueado del Pensadero.
- */
-export function createSealMarkup() {
-  return `
-    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
-      <circle cx="32" cy="32" r="29" stroke="currentColor" stroke-width="1.4" opacity="0.7" />
-      <circle cx="32" cy="32" r="22" stroke="currentColor" stroke-width="1" opacity="0.5" />
-      <path
-        d="M32 14v10m0 16v10m-18-18h10m16 0h10"
-        stroke="currentColor"
-        stroke-width="1.4"
-        stroke-linecap="round"
-        opacity="0.8"
-      />
-      <rect x="26" y="26" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4" />
-    </svg>
-  `;
-}

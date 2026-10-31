@@ -1,0 +1,882 @@
+/* ==========================================================================
+   Sistema de escenas — el envoltorio compartido por los lugares
+   secundarios (todo salvo el vestíbulo, que tiene su propia hoja) y los
+   puntos interactivos ("hotspots") que permiten moverse por el mundo.
+   ========================================================================== */
+
+.view-panel {
+  display: block;
+  min-height: 100%;
+}
+
+/* -- Envoltorio de escena secundaria: a pantalla completa, sin borde
+      ni recuadro, para que se sienta como un lugar y no como una
+      tarjeta flotando sobre el fondo de la página -- */
+.scene-frame {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.scene-frame__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* -- Destellos por encima del fondo (foto o arte procedimental): la
+      misma capa, no una aparte detrás del "cuadro" -- */
+.scene-frame__sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* -- Fondo fotográfico compartido por cualquier escena
+      (sceneBackground.js): vacío/transparente hasta que el recurso
+      exista; se funde encima del arte procedimental cuando carga. El
+      vestíbulo, que tiene su propia pila de capas, ajusta este
+      z-index en `vestibulo.css`. -- */
+.scene-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-standard);
+  will-change: transform;
+}
+
+.has-photo-background .scene-photo {
+  opacity: 1;
+}
+
+.scene-frame__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 32%, transparent 35%, rgba(2, 3, 8, 0.6) 100%);
+}
+
+/* -- El castillo reacciona brevemente al acertar un expediente: la
+      misma viñeta de la escena se ilumina un instante (ver
+      `calendarView.js`, `pulseCastle`), sin añadir ningún elemento
+      nuevo al DOM. -- */
+.scene-frame--riddle-pulse .scene-frame__vignette {
+  animation: castle-riddle-pulse 1200ms var(--ease-standard);
+}
+
+@keyframes castle-riddle-pulse {
+  0% {
+    background: radial-gradient(ellipse at 50% 32%, transparent 35%, rgba(2, 3, 8, 0.6) 100%);
+  }
+  30% {
+    background: radial-gradient(ellipse at 50% 32%, rgba(216, 184, 90, 0.18) 20%, rgba(2, 3, 8, 0.6) 100%);
+  }
+  100% {
+    background: radial-gradient(ellipse at 50% 32%, transparent 35%, rgba(2, 3, 8, 0.6) 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-frame--riddle-pulse .scene-frame__vignette {
+    animation: none;
+  }
+}
+
+/* -- Apariciones ambientales ocasionales y discretas (ver
+      `ambient/occasionalEvents.js`): comparten estas capas con todo lo
+      demás, no añaden elementos nuevos por escena. -- */
+.scene-frame__shadow-pass {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scene-frame__shadow-pass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 22%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent 0%, rgba(0, 0, 0, 0.38) 45%, transparent 100%);
+  filter: blur(18px);
+  opacity: 0;
+}
+
+.scene-frame__shadow-pass--active::before {
+  animation: shadow-sweep 2.7s ease-in-out;
+}
+
+@keyframes shadow-sweep {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(560%);
+  }
+}
+
+.scene-frame__vignette--flicker {
+  animation: vignette-flicker 950ms steps(6, end);
+}
+
+@keyframes vignette-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0.55;
+  }
+  20% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.6;
+  }
+}
+
+.scene-frame__sparkles--burst {
+  animation: sparkles-burst 1.9s ease-out;
+}
+
+@keyframes sparkles-burst {
+  0% {
+    filter: brightness(1);
+  }
+  30% {
+    filter: brightness(1.6);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* -- Presagio excepcional (ver `scenes/desafiosScene.js`): un
+      resplandor plateado, distinto en tono del pulso dorado de acierto
+      (`scene-frame--riddle-pulse`) y del parpadeo ambiental normal, para
+      que se note como una rareza propia, no como una repetición de un
+      efecto ya visto. -- */
+.scene-frame__vignette--omen {
+  animation: moth-omen-sweep 2.6s ease-in-out;
+}
+
+@keyframes moth-omen-sweep {
+  0%,
+  100% {
+    background: radial-gradient(ellipse at 50% 32%, transparent 35%, rgba(2, 3, 8, 0.6) 100%);
+  }
+  50% {
+    background: radial-gradient(ellipse at 50% 32%, rgba(199, 206, 219, 0.22) 22%, rgba(2, 3, 8, 0.6) 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-frame__shadow-pass--active::before,
+  .scene-frame__vignette--flicker,
+  .scene-frame__sparkles--burst,
+  .scene-frame__vignette--omen {
+    animation: none;
+  }
+}
+
+.scene-frame__content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 42rem;
+  padding: 5rem var(--space-5) var(--space-6);
+  margin-top: auto;
+}
+
+/* -- En el Archivo, `extraContent` (registro de hallazgos + cromos +
+      historias completas) puede crecer mucho más que el resto de las
+      escenas — hasta 15 expedientes releíbles además de los hilos
+      secretos. Sin este tope, `.scene-frame__content` empujaba la
+      altura de TODO `.scene-frame` (y, con ella, el fondo fotográfico
+      y cada hotspot posicionado en porcentaje) muy por debajo del
+      viewport: los hotspots quedaban técnicamente "en su sitio
+      relativo" pero a miles de píxeles de scroll, inalcanzables sin
+      buscarlos. Limitar la altura aquí, con scroll propio, mantiene
+      `.scene-frame` siempre cerca de una pantalla, que es lo que ya
+      asumen las posiciones de cada hotspot. Solo en móvil: en
+      escritorio el texto vive en una columna angosta junto a la foto,
+      no encima de ella, así que este problema no se da. -- */
+@media (max-width: 640px) {
+  .scene-frame__content {
+    max-height: 72vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.scene-frame__plaque {
+  background: rgba(6, 7, 14, 0.82);
+  border: var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  backdrop-filter: blur(4px);
+}
+
+.scene-frame__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-left: var(--space-5);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.scene-frame__list li {
+  list-style: disc;
+}
+
+/* -- Hotspots: puntos de interacción integrados en el mundo -- */
+.hotspot {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-gold-bright);
+  z-index: 9;
+}
+
+.hotspot:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 5px;
+  border-radius: var(--radius-md);
+}
+
+.hotspot__glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.42;
+  box-shadow: 0 0 0 1px rgba(216, 184, 90, 0.3), 0 0 18px 3px rgba(216, 184, 90, 0.28);
+  animation: hotspot-breathe 4.5s ease-in-out infinite;
+  transition: opacity var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.hotspot:hover .hotspot__glow,
+.hotspot:focus-visible .hotspot__glow {
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(216, 184, 90, 0.6), 0 0 28px 7px rgba(216, 184, 90, 0.5);
+  animation-play-state: paused;
+}
+
+.hotspot__caption {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  transform: translate(-50%, 4px);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: rgba(7, 9, 16, 0.92);
+  border: var(--border-gold);
+  color: var(--color-silver-bright);
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
+}
+
+.hotspot:hover .hotspot__caption,
+.hotspot:focus-visible .hotspot__caption {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.hotspot__caption-icon {
+  display: inline-flex;
+  width: 0.85rem;
+  height: 0.85rem;
+  opacity: 0.85;
+}
+
+.hotspot__caption-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* -- Variante "misteriosa": la Sala Oculta apenas se insinúa hasta que
+      se explora, pero sigue siendo descubrible sin depender del hover -- */
+.hotspot--mystery .hotspot__glow {
+  opacity: 0.1;
+  animation: hotspot-breathe-faint 7s ease-in-out infinite;
+}
+
+.hotspot--mystery:hover .hotspot__glow,
+.hotspot--mystery:focus-visible .hotspot__glow {
+  opacity: 1;
+  animation-play-state: paused;
+}
+
+@keyframes hotspot-breathe {
+  0%,
+  100% {
+    opacity: 0.32;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes hotspot-breathe-faint {
+  0%,
+  100% {
+    opacity: 0.06;
+  }
+  50% {
+    opacity: 0.18;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotspot__glow {
+    animation: none;
+    opacity: 0.4;
+  }
+  .hotspot--mystery .hotspot__glow {
+    animation: none;
+    opacity: 0.14;
+  }
+}
+
+/* -- Destello de descubrimiento: un anillo dorado que se expande una
+      sola vez, disparado automáticamente por `magicReveal.js` en
+      cualquier hotspot que revele algo — "runas y símbolos que
+      reaccionan al descubrirse" sin tener que repetir el efecto escena
+      por escena. El selector lleva el elemento Y las dos clases a
+      propósito (especificidad 0,2,1): `.hotspot--mystery .hotspot__glow`
+      (0,2,0) y la respiración base `.hotspot__glow` (0,1,0) no deben
+      poder ganarle a este destello puntual, sea cual sea el orden en
+      la hoja de estilos. -- */
+span.hotspot__glow.hotspot__glow--discovery-burst {
+  animation: hotspot-discovery-burst 700ms ease-out;
+  /* `.hotspot:hover .hotspot__glow`/`:focus-visible` (especificidad
+     0,3,0) pausan la animación continua a propósito mientras el
+     puntero o el foco siguen ahí — pero justo eso es lo normal
+     inmediatamente después de activar el hotspot (el clic deja el
+     ratón encima, o el foco en el botón). Sin este `!important` el
+     destello de un solo uso quedaría congelado a medio camino en vez
+     de completarse, y `animationend` nunca llegaría a disparar su
+     propia limpieza. */
+  animation-play-state: running !important;
+}
+
+@keyframes hotspot-discovery-burst {
+  0% {
+    box-shadow: 0 0 0 0 rgba(216, 184, 90, 0.65), 0 0 18px 3px rgba(216, 184, 90, 0.28);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(216, 184, 90, 0), 0 0 18px 3px rgba(216, 184, 90, 0.28);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(216, 184, 90, 0), 0 0 18px 3px rgba(216, 184, 90, 0.28);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotspot__glow--discovery-burst {
+    animation: none;
+  }
+}
+
+/* -- Hotspots del Mapa del Castillo: el mismo componente `.hotspot` de
+      arriba, posicionado por lugar mediante variables CSS en vez de
+      una clase BEM por lugar (`mapHotspotsView.js` las define inline).
+      El punto de ruptura (640px) es deliberadamente el mismo que ya
+      usa `sceneBackground.js` para elegir entre `mapa-desktop.jpg` y
+      `mapa-mobile.jpg`: las posiciones cambian exactamente cuando
+      cambia la foto, nunca antes ni después. -- */
+.map-hotspot {
+  left: var(--hotspot-x);
+  top: var(--hotspot-y);
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 640px) {
+  .map-hotspot {
+    left: var(--hotspot-x-mobile);
+    top: var(--hotspot-y-mobile);
+  }
+}
+
+/* -- Lugar todavía bloqueado: se ve y se puede encontrar (no
+      desaparece ni se confunde con el decorado), pero visualmente
+      apagado y con un pequeño candado, nunca con el aspecto de un
+      botón roto. `disabled` ya impide cualquier activación por clic o
+      teclado; esto es solo la capa visual. -- */
+.map-hotspot--locked {
+  cursor: default;
+}
+
+.map-hotspot--locked .hotspot__glow {
+  opacity: 0.16;
+  animation: none;
+  box-shadow: 0 0 0 1px rgba(195, 206, 219, 0.25), 0 0 14px 2px rgba(195, 206, 219, 0.18);
+}
+
+.map-hotspot--locked:hover .hotspot__glow {
+  opacity: 0.3;
+  box-shadow: 0 0 0 1px rgba(195, 206, 219, 0.35), 0 0 18px 3px rgba(195, 206, 219, 0.25);
+}
+
+.map-hotspot--locked .hotspot__caption {
+  color: var(--color-text-muted);
+  border-color: rgba(195, 206, 219, 0.3);
+}
+
+.map-hotspot__lock-icon {
+  position: relative;
+  width: 0.9rem;
+  height: 0.9rem;
+  color: var(--color-silver);
+  opacity: 0.75;
+}
+
+.map-hotspot__lock-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* -- Tercera parada del recorrido secreto de la polilla, ya completa
+      (ver `scenes/mapaScene.js`): el mismo tratamiento de "logro
+      persistente" que ya usa el resto del proyecto (cerradura resuelta,
+      cofre despierto), en plata para distinguirlo de un acierto de
+      expediente (dorado) o de la cerradura (verde). -- */
+.map-hotspot--pattern-complete .hotspot__glow {
+  opacity: 0.55;
+  box-shadow: 0 0 0 1px rgba(199, 206, 219, 0.5), 0 0 18px 5px rgba(199, 206, 219, 0.35);
+  animation: none;
+}
+
+.map-hotspot--pattern-complete:hover .hotspot__glow,
+.map-hotspot--pattern-complete:focus-visible .hotspot__glow {
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(199, 206, 219, 0.7), 0 0 26px 7px rgba(199, 206, 219, 0.5);
+}
+
+/* -- Calidez progresiva de una escena según el acto narrativo
+      alcanzado (0-4, ver `calendar/actProgress.js`): reutiliza la
+      misma viñeta que ya existe en toda escena, solo cambia su color.
+      Pensado hoy para la Sala de los Menesteres, pero deliberadamente
+      genérico (`.scene-frame--act-N`, no `.desafios-scene--act-N`) por
+      si otra escena lo reutiliza más adelante. -- */
+.scene-frame--act-1 .scene-frame__vignette,
+.scene-frame--act-2 .scene-frame__vignette,
+.scene-frame--act-3 .scene-frame__vignette,
+.scene-frame--act-4 .scene-frame__vignette {
+  transition: background 1200ms var(--ease-standard);
+}
+
+.scene-frame--act-1 .scene-frame__vignette {
+  background: radial-gradient(ellipse at 50% 32%, rgba(216, 184, 90, 0.04) 25%, rgba(2, 3, 8, 0.6) 100%);
+}
+
+.scene-frame--act-2 .scene-frame__vignette {
+  background: radial-gradient(ellipse at 50% 32%, rgba(216, 184, 90, 0.08) 22%, rgba(2, 3, 8, 0.58) 100%);
+}
+
+.scene-frame--act-3 .scene-frame__vignette {
+  background: radial-gradient(ellipse at 50% 32%, rgba(216, 184, 90, 0.13) 20%, rgba(2, 3, 8, 0.55) 100%);
+}
+
+.scene-frame--act-4 .scene-frame__vignette {
+  background: radial-gradient(ellipse at 50% 32%, rgba(216, 184, 90, 0.18) 18%, rgba(2, 3, 8, 0.5) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-frame--act-1 .scene-frame__vignette,
+  .scene-frame--act-2 .scene-frame__vignette,
+  .scene-frame--act-3 .scene-frame__vignette,
+  .scene-frame--act-4 .scene-frame__vignette {
+    transition: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .scene-frame__content {
+    padding: 5.5rem var(--space-7) var(--space-7);
+  }
+}
+
+/* -- Puntos de montaje para objetos ambientales concretos (velas,
+      llave) dentro de cada fondo — z-index por encima de `.scene-photo`
+      para que floten delante de la fotografía en cuanto exista -- */
+.scene-desk-candle {
+  position: absolute;
+  left: 58%;
+  top: 54%;
+  width: 14%;
+  height: 18%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scene-table-candles {
+  position: absolute;
+  left: 30%;
+  top: 56%;
+  width: 40%;
+  height: 20%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scene-corridor-candles {
+  position: absolute;
+  left: 30%;
+  top: 4%;
+  width: 40%;
+  height: 22%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scene-reading-candles {
+  position: absolute;
+  left: 8%;
+  top: 60%;
+  width: 36%;
+  height: 20%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scene-key-glint {
+  position: absolute;
+  left: 50%;
+  top: 76%;
+  width: 1.5rem;
+  height: 1.5rem;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  color: var(--color-gold-bright);
+  opacity: 0.8;
+  animation: sigil-pulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-key-glint {
+    animation: none;
+  }
+}
+
+/* Si el fondo fotográfico de la escena ya trae sus propias velas,
+   evita duplicarlas con las procedimentales (mismo criterio que el
+   vestíbulo en `vestibulo.css`). El polvo/las motas sí se conservan:
+   son un efecto atmosférico, no un objeto concreto repetido. */
+.has-photo-background .scene-desk-candle,
+.has-photo-background .scene-table-candles,
+.has-photo-background .scene-key-glint {
+  display: none;
+}
+
+/* -- Brillo persistente sobre la cerradura del Archivo, encendido al
+      resolver el día 12 (ver `calendar/castleEvents.isArchiveChestAwake`).
+      A diferencia de `.scene-key-glint`, este SÍ se apoya en la foto
+      real (se posiciona sobre el mecanismo visible en
+      `archivo-desktop.jpg`/`archivo-mobile.jpg`), así que nunca se
+      oculta con `.has-photo-background`. -- */
+.archive-lock-glow {
+  position: absolute;
+  left: 34%;
+  top: 54%;
+  width: 3rem;
+  height: 3rem;
+  /* Por encima de `.scene-frame__content` (z-index 3): en el Archivo la
+     placa de texto puede crecer bastante (lista de hallazgos incluida)
+     y no debe tapar un brillo que vive sobre la foto. */
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .archive-lock-glow {
+    left: 36%;
+    top: 49%;
+  }
+}
+
+.archive-lock-glow--active {
+  opacity: 1;
+  box-shadow: 0 0 14px 4px rgba(216, 184, 90, 0.65), 0 0 30px 12px rgba(216, 184, 90, 0.35);
+  animation: sigil-pulse 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-lock-glow--active {
+    animation: none;
+  }
+}
+
+/* -- Posicionamiento de la polilla plateada (u otra criatura puntual)
+      cuando aparece suelta sobre el fondo de una escena, fuera del
+      vestíbulo (que ya tiene su propia capa `.vestibulo-scene__creatures`
+      con paralaje). -- */
+.scene-moth {
+  position: absolute;
+  z-index: 2;
+  animation: moth-hover 9s ease-in-out infinite;
+}
+
+/* Vuelo más orgánico que un simple vaivén vertical: un pequeño
+   recorrido cerrado (ida y vuelta por puntos distintos, nunca el mismo
+   camino de regreso), coherente con una polilla real revoloteando en
+   torno a un punto fijo, no flotando en el sitio. Sigue siendo un
+   movimiento contenido y discreto — no viaja por la escena, no
+   distrae de los puntos interactivos. */
+@keyframes moth-hover {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-3px, -5px) rotate(-3deg);
+  }
+  42% {
+    transform: translate(2px, -8px) rotate(2deg);
+  }
+  65% {
+    transform: translate(4px, -2px) rotate(3deg);
+  }
+  83% {
+    transform: translate(-2px, 1px) rotate(-1deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-moth {
+    animation: none;
+  }
+}
+
+/* -- El retrato del Archivo Secreto: mismo recurso gráfico que el del
+      Vestíbulo, en otra sala (ver `scenes/archivoScene.js`). Reutiliza
+      la animación `portrait-awake` ya definida en `vestibulo.css` (las
+      `@keyframes` no están ligadas a un archivo) en vez de duplicarla. -- */
+.archivo-portrait {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.55));
+}
+
+.archivo-portrait--awake {
+  animation: portrait-awake 1.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archivo-portrait--awake {
+    animation: none;
+  }
+}
+
+/* -- Evolución visual persistente del Archivo: la pila de pergaminos
+      crece con el acto (ver `scenes/archivoScene.js`). Mismo z-index
+      que `.archivo-portrait`/`.scene-moth`: por encima de la foto real
+      cuando ya cargó, nunca oculta detrás de ella. -- */
+.archivo-papers-overlay {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+}
+
+/* En una pantalla angosta, el registro de hallazgos (hasta seis
+   entradas más la colección de cromos) puede crecer lo bastante como
+   para cubrir casi toda la foto por debajo del título — no hay ninguna
+   posición fija que quede garantizada libre en ese caso. Es un detalle
+   puramente decorativo (no un hotspot, no aporta nada interactivo), así
+   que en móvil se deja de mostrar en vez de arriesgarse a aparecer
+   encima de texto legible. */
+@media (max-width: 640px) {
+  .archivo-papers-overlay {
+    display: none;
+  }
+}
+
+/* -- El cofre, objeto examinable: un breve pulso al tocarlo. -- */
+.archivo-chest--examined-pulse .hotspot__glow {
+  animation: hotspot-breathe 4.5s ease-in-out infinite, archivo-chest-pulse 900ms ease-out;
+}
+
+@keyframes archivo-chest-pulse {
+  0% {
+    box-shadow: 0 0 0 1px rgba(216, 184, 90, 0.3), 0 0 18px 3px rgba(216, 184, 90, 0.28);
+  }
+  40% {
+    box-shadow: 0 0 0 1px rgba(216, 184, 90, 0.8), 0 0 34px 10px rgba(216, 184, 90, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 1px rgba(216, 184, 90, 0.3), 0 0 18px 3px rgba(216, 184, 90, 0.28);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archivo-chest--examined-pulse .hotspot__glow {
+    animation: none;
+  }
+}
+
+/* -- La lámpara de la Biblioteca: evolución visual persistente (su
+      intensidad crece con el acto, vía la variable `--lamp-glow-opacity`
+      fijada en línea por `bibliotecaScene.js`) y objeto examinable a la
+      vez. Mismo z-index que el resto de overlays de esta familia. -- */
+.biblioteca-lamp-glow {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 20%, rgba(216, 184, 90, var(--lamp-glow-opacity, 0.2)) 0%, rgba(216, 184, 90, 0) 70%);
+  transition: background 1200ms var(--ease-standard);
+  animation: biblioteca-lamp-breathe 7s ease-in-out infinite;
+}
+
+/* Iluminación ambiental con movimiento lento: la propia llama de la
+   lámpara respira, nunca una luz perfectamente fija. Sutil a
+   propósito — no debe leerse como un parpadeo, solo como algo vivo. */
+@keyframes biblioteca-lamp-breathe {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.12);
+  }
+}
+
+.biblioteca-lamp-glow--flare {
+  animation: biblioteca-lamp-breathe 7s ease-in-out infinite, biblioteca-lamp-flare 900ms ease-out;
+}
+
+@keyframes biblioteca-lamp-flare {
+  0% {
+    filter: brightness(1);
+  }
+  35% {
+    filter: brightness(1.7);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .biblioteca-lamp-glow {
+    transition: none;
+    animation: none;
+  }
+  .biblioteca-lamp-glow--flare {
+    animation: none;
+  }
+}
+
+/* -- La sábana de la Sala de los Menesteres: evolución visual
+      persistente (ver `scenes/desafiosScene.js`). Mismo z-index que el
+      resto de esta familia de overlays, centrada sobre la foto. -- */
+.desafios-sheet {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 46%;
+  max-width: 420px;
+  aspect-ratio: 200 / 160;
+  z-index: 2;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(var(--sheet-scale, 1));
+  opacity: var(--sheet-opacity, 1);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5));
+  transition: transform 1400ms var(--ease-standard), opacity 1400ms var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desafios-sheet {
+    transition: none;
+  }
+}
+
+/* -- Consecuencia visible y persistente de resolver «la corriente
+      fría» (ver `discoveries/coldDraftContent.js`): la viñeta de la
+      sala queda, para siempre, un tono más cálida que la que ya
+      corresponde a su acto — igual que `.scene-frame--act-N`, pero
+      sumado, nunca reemplazado. -- */
+.scene-frame--draft-resolved .scene-frame__vignette {
+  background: radial-gradient(ellipse at 50% 32%, rgba(216, 184, 90, 0.1) 25%, rgba(2, 3, 8, 0.55) 100%);
+}
+
+/* -- Criatura mágica reutilizable (creature.js): fondo transparente,
+      proporciones conservadas, nunca intercepta clics -- */
+.creature {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.creature__video,
+.creature__still {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* `display: block` de arriba empataría en especificidad con la regla
+   `[hidden]` del navegador y, al venir después en la cascada, la
+   ganaría: el elemento oculto seguiría ocupando su espacio (100% del
+   ahora sí definido tamaño de `.creature`) y empujaría al otro hacia
+   abajo, como ocurría con el retrato antes de este arreglo. */
+.creature__video[hidden],
+.creature__still[hidden] {
+  display: none;
+}

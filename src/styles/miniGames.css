@@ -1,0 +1,392 @@
+/* ==========================================================================
+   Estilos compartidos por los minijuegos nuevos (catálogo de la
+   Biblioteca, pasos ocultos del Mapa, sello del Archivo, runas de la
+   Sala de los Menesteres) — generalizados a partir de `.moth-lock-panel`
+   (`mothLock.css`), que sigue intacto con sus propias clases para no
+   arriesgar nada ya probado. Mismo criterio visual: un panel claro
+   tipo pergamino (reutiliza `.reading-panel__sheet`), nunca una
+   pantalla de videojuego.
+   ========================================================================== */
+
+.mini-game-panel {
+  color: #2a2013;
+}
+
+.mini-game-panel__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7a642a;
+  margin-bottom: var(--space-2);
+}
+
+.mini-game-panel__heading {
+  color: #2a2013;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  text-transform: none;
+  text-shadow: none;
+  letter-spacing: normal;
+  margin-bottom: var(--space-2);
+}
+
+.mini-game-panel__intro {
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: #5a4a2a;
+  line-height: 1.55;
+  margin-bottom: var(--space-3);
+}
+
+.mini-game-panel__phase {
+  font-size: var(--text-sm);
+  color: #4a3420;
+  margin-bottom: var(--space-4);
+}
+
+.mini-game-panel__clues {
+  margin-bottom: var(--space-4);
+}
+
+.mini-game-panel__clues-heading {
+  font-family: var(--font-display);
+  font-weight: bold;
+  color: #2a2013;
+  font-size: var(--text-sm);
+  text-transform: none;
+  margin-bottom: var(--space-2);
+}
+
+.mini-game-panel__clues-empty {
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: #7a642a;
+}
+
+.mini-game-panel__clues-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.mini-game-panel__clue {
+  list-style: none;
+  font-size: var(--text-sm);
+  color: #4a3420;
+  line-height: 1.55;
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed rgba(122, 100, 42, 0.4);
+  border-radius: var(--radius-sm);
+}
+
+.mini-game-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Dentro del pergamino el fondo es claro (al revés que el resto del
+   sitio), así que los botones "arcanos" necesitan su propio contraste
+   oscuro — mismo criterio que ya usan `.letter-sheet__finish` y
+   `.moth-lock-panel .btn-arcane`. */
+.mini-game-panel .btn-arcane {
+  border-color: #7a642a;
+  background: rgba(122, 100, 42, 0.12);
+  color: #2a2013;
+}
+
+.mini-game-panel .btn-arcane:hover,
+.mini-game-panel .btn-arcane:focus-visible {
+  border-color: #4a3420;
+  box-shadow: none;
+  background: rgba(122, 100, 42, 0.22);
+}
+
+.mini-game-panel .btn-arcane--ghost {
+  background: transparent;
+  color: #4a3420;
+  border-color: rgba(122, 100, 42, 0.4);
+}
+
+.mini-game-panel__feedback {
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.mini-game-panel__feedback--incorrect {
+  color: #6b2626;
+  background: rgba(179, 80, 80, 0.12);
+  border: 1px solid rgba(179, 80, 80, 0.35);
+}
+
+.mini-game-panel__hint {
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: #4a3420;
+}
+
+/* -- Victoria: el mismo resplandor que ya usa el acierto de un
+      expediente (`riddle-reveal-burst`, en `calendar.css` pero
+      global), para que resolver cualquier minijuego se sienta
+      coherente con el resto del mundo reaccionando a un logro real. -- */
+.mini-game-panel__victory {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(90, 155, 114, 0.5);
+  background: rgba(90, 155, 114, 0.08);
+}
+
+.mini-game-panel__victory--event {
+  animation: riddle-reveal-burst 900ms var(--ease-standard) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-game-panel__victory--event {
+    animation: none;
+  }
+}
+
+.mini-game-panel__victory-tag {
+  font-family: var(--font-display);
+  font-weight: bold;
+  color: #2d5b3e;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.mini-game-panel__victory-text {
+  color: #2a2013;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* -- Mandos tipo "select" (catálogo, sello): mismo patrón que
+      `.moth-lock-dial`, generalizado. -- */
+.mini-game-dials {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.mini-game-dial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(122, 100, 42, 0.35);
+  background: rgba(42, 32, 19, 0.04);
+}
+
+.mini-game-dial__label {
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #7a642a;
+  text-align: center;
+}
+
+.mini-game-dial__select {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid #7a642a;
+  background: var(--color-parchment);
+  color: #2a2013;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.mini-game-dial__select:focus-visible {
+  outline: 2px solid #7a642a;
+  outline-offset: 1px;
+}
+
+.mini-game-dial__select[disabled] {
+  opacity: 0.85;
+  cursor: default;
+}
+
+@media (max-width: 420px) {
+  .mini-game-dials {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+}
+
+/* -- Cuadrícula de opciones pulsables (catálogo, rastreo de pasos): un
+      botón por candidato, en vez de un `<select>` — usado cuando el
+      número de opciones es mayor y conviene verlas todas a la vez. -- */
+.mini-game-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.mini-game-option {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(122, 100, 42, 0.4);
+  background: rgba(42, 32, 19, 0.04);
+  color: #2a2013;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mini-game-option:hover,
+.mini-game-option:focus-visible {
+  border-color: #4a3420;
+  background: rgba(122, 100, 42, 0.14);
+  outline: none;
+}
+
+.mini-game-option--selected {
+  border-color: #7a642a;
+  background: rgba(122, 100, 42, 0.22);
+  font-weight: bold;
+}
+
+.mini-game-option--correct {
+  border-color: rgba(90, 155, 114, 0.6);
+  background: rgba(90, 155, 114, 0.14);
+}
+
+/* -- Hotspot de un minijuego, antes de resolverse: destaca más que un
+      hotspot "mystery" ambiental cualquiera, igual que ya hace
+      `.moth-lock-hotspot` (reutiliza `hotspot-breathe`, de `scene.css`). -- */
+.mini-game-hotspot:not(.mini-game-hotspot--solved) .hotspot__glow {
+  animation: hotspot-breathe 3.2s ease-in-out infinite;
+}
+
+.mini-game-hotspot:not(.mini-game-hotspot--solved):hover .hotspot__glow,
+.mini-game-hotspot:not(.mini-game-hotspot--solved):focus-visible .hotspot__glow {
+  opacity: 1;
+  animation-play-state: paused;
+}
+
+.mini-game-hotspot--solved .hotspot__glow {
+  opacity: 0.6;
+  box-shadow: 0 0 0 1px rgba(90, 155, 114, 0.5), 0 0 20px 5px rgba(90, 155, 114, 0.35);
+  animation: none;
+}
+
+.mini-game-hotspot--solved:hover .hotspot__glow,
+.mini-game-hotspot--solved:focus-visible .hotspot__glow {
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(90, 155, 114, 0.7), 0 0 28px 8px rgba(90, 155, 114, 0.5);
+}
+
+/* -- Pasos ocultos del Mapa: marcas pulsables directamente sobre el
+      pergamino, en el orden en que se van tocando. -- */
+.hidden-path-mark--done .hotspot__glow {
+  opacity: 0.6;
+  box-shadow: 0 0 0 1px rgba(90, 155, 114, 0.5), 0 0 16px 4px rgba(90, 155, 114, 0.35);
+  animation: none;
+}
+
+.hidden-path-mark__order {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--color-gold-bright);
+  pointer-events: none;
+}
+
+/* -- Runas de la Sala de los Menesteres: cuadrícula de símbolos
+      pulsables, resaltados uno a uno al reproducir la secuencia. -- */
+.rune-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 420px) {
+  .rune-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.rune-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(122, 100, 42, 0.4);
+  background: rgba(42, 32, 19, 0.04);
+  color: #2a2013;
+  cursor: pointer;
+}
+
+.rune-button:hover,
+.rune-button:focus-visible {
+  border-color: #4a3420;
+  outline: none;
+}
+
+.rune-button svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.rune-button__label {
+  font-size: var(--text-xs);
+}
+
+.rune-button--active {
+  border-color: #7a642a;
+  background: rgba(122, 100, 42, 0.3);
+  box-shadow: 0 0 0 2px rgba(216, 184, 90, 0.5);
+}
+
+.rune-button--picked {
+  border-color: #7a642a;
+  background: rgba(122, 100, 42, 0.16);
+}
+
+.rune-sequence-text {
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: #4a3420;
+  margin-bottom: var(--space-3);
+}
+
+.rune-picked-trail {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  min-height: 1.75rem;
+}
+
+.rune-picked-trail__slot {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(122, 100, 42, 0.4);
+}
+
+.rune-picked-trail__slot svg {
+  width: 100%;
+  height: 100%;
+}

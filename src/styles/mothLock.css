@@ -1,0 +1,260 @@
+/* ==========================================================================
+   «La cerradura de la polilla» — primer minijuego interactivo del
+   proyecto, dentro de la escena de la Sala de los Menesteres. El panel
+   del mecanismo reutiliza el pergamino claro de `.reading-panel__sheet`
+   (igual que la carta y las instrucciones): aquí es, además,
+   narrativamente coherente — un diagrama antiguo trazado sobre
+   pergamino, no una pantalla de videojuego.
+   ========================================================================== */
+
+.moth-lock-panel {
+  color: #2a2013;
+}
+
+.moth-lock-panel__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7a642a;
+  margin-bottom: var(--space-2);
+}
+
+.moth-lock-panel__heading {
+  color: #2a2013;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  text-transform: none;
+  text-shadow: none;
+  letter-spacing: normal;
+  margin-bottom: var(--space-2);
+}
+
+.moth-lock-panel__phase {
+  font-size: var(--text-sm);
+  color: #4a3420;
+  margin-bottom: var(--space-4);
+}
+
+.moth-lock-panel__clues {
+  margin-bottom: var(--space-4);
+}
+
+.moth-lock-panel__clues-heading {
+  font-family: var(--font-display);
+  font-weight: bold;
+  color: #2a2013;
+  font-size: var(--text-sm);
+  text-transform: none;
+  margin-bottom: var(--space-2);
+}
+
+.moth-lock-panel__clues-empty {
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: #7a642a;
+}
+
+.moth-lock-panel__clues-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.moth-lock-panel__clue {
+  list-style: none;
+  font-size: var(--text-sm);
+  color: #4a3420;
+  line-height: 1.55;
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed rgba(122, 100, 42, 0.4);
+  border-radius: var(--radius-sm);
+}
+
+/* -- Mandos del mecanismo -- */
+.moth-lock-panel__dials,
+.moth-lock-panel__solution {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.moth-lock-dial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(122, 100, 42, 0.35);
+  background: rgba(42, 32, 19, 0.04);
+}
+
+.moth-lock-dial__preview {
+  width: 3rem;
+  height: 3rem;
+  color: #4a3420;
+}
+
+.moth-lock-dial__preview svg {
+  width: 100%;
+  height: 100%;
+}
+
+.moth-lock-dial__label {
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #7a642a;
+}
+
+.moth-lock-dial__select {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid #7a642a;
+  background: var(--color-parchment);
+  color: #2a2013;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+}
+
+.moth-lock-dial__select:focus-visible {
+  outline: 2px solid #7a642a;
+  outline-offset: 1px;
+}
+
+.moth-lock-dial__select[disabled] {
+  opacity: 0.85;
+  cursor: default;
+}
+
+.moth-lock-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* Dentro del pergamino, los botones "arcanos" necesitan su propio
+   contraste oscuro (el resto del sitio es texto claro sobre fondo
+   oscuro, pero aquí el fondo es claro) — mismo criterio ya aplicado a
+   `.letter-sheet__finish`. */
+.moth-lock-panel .btn-arcane {
+  border-color: #7a642a;
+  background: rgba(122, 100, 42, 0.12);
+  color: #2a2013;
+}
+
+.moth-lock-panel .btn-arcane:hover,
+.moth-lock-panel .btn-arcane:focus-visible {
+  border-color: #4a3420;
+  box-shadow: none;
+  background: rgba(122, 100, 42, 0.22);
+}
+
+.moth-lock-panel .btn-arcane--ghost {
+  background: transparent;
+  color: #4a3420;
+  border-color: rgba(122, 100, 42, 0.4);
+}
+
+.moth-lock-panel__feedback {
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+}
+
+.moth-lock-panel__feedback--incorrect {
+  color: #6b2626;
+  background: rgba(179, 80, 80, 0.12);
+  border: 1px solid rgba(179, 80, 80, 0.35);
+}
+
+.moth-lock-panel__hint {
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: #4a3420;
+}
+
+/* -- Victoria: el mismo recurso de resplandor que ya usa el acierto de
+      un expediente (`riddle-reveal-burst`, definida en `calendar.css`
+      pero global), para que abrir la cerradura se sienta como el mismo
+      tipo de acontecimiento, sin inventar una animación aparte. -- */
+.moth-lock-panel__victory {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(90, 155, 114, 0.5);
+  background: rgba(90, 155, 114, 0.08);
+}
+
+.moth-lock-panel__victory--event {
+  animation: riddle-reveal-burst 900ms var(--ease-standard) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moth-lock-panel__victory--event {
+    animation: none;
+  }
+}
+
+.moth-lock-panel__victory-tag {
+  font-family: var(--font-display);
+  font-weight: bold;
+  color: #2d5b3e;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.moth-lock-panel__victory-text {
+  color: #2a2013;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* -- Hotspot del mecanismo, antes de resolverse: es el único
+      minijuego real del proyecto, así que merece destacar más que un
+      hotspot "mystery" ambiental cualquiera (cuyo pulso es
+      deliberadamente casi imperceptible). Reutiliza `hotspot-breathe`
+      (ya definida en `scene.css` para la carta sin leer), no una
+      animación nueva. -- */
+.moth-lock-hotspot:not(.moth-lock-hotspot--solved) .hotspot__glow {
+  animation: hotspot-breathe 3.2s ease-in-out infinite;
+}
+
+.moth-lock-hotspot:not(.moth-lock-hotspot--solved):hover .hotspot__glow,
+.moth-lock-hotspot:not(.moth-lock-hotspot--solved):focus-visible .hotspot__glow {
+  opacity: 1;
+  animation-play-state: paused;
+}
+
+/* -- Hotspot del mecanismo, una vez resuelto: el mismo tratamiento de
+      "logro persistente" que ya usa `.archive-lock-glow--active` /
+      `.calendar-tile--solved`, para que se note de un vistazo incluso
+      antes de volver a abrir el panel. -- */
+.moth-lock-hotspot--solved .hotspot__glow {
+  opacity: 0.6;
+  box-shadow: 0 0 0 1px rgba(90, 155, 114, 0.5), 0 0 20px 5px rgba(90, 155, 114, 0.35);
+  animation: none;
+}
+
+.moth-lock-hotspot--solved:hover .hotspot__glow,
+.moth-lock-hotspot--solved:focus-visible .hotspot__glow {
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(90, 155, 114, 0.7), 0 0 28px 8px rgba(90, 155, 114, 0.5);
+}
+
+@media (max-width: 420px) {
+  .moth-lock-panel__dials,
+  .moth-lock-panel__solution {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+  }
+}

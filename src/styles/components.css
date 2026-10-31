@@ -1,7 +1,492 @@
 /* ==========================================================================
-   Componentes reutilizables — pestañas de navegación, botones, paneles,
-   insignias de estado, divisores ornamentales.
+   Componentes reutilizables — foco accesible, botón de sonido, insignia
+   de estado "en preparación" y utilidades de interacción compartidas.
    ========================================================================== */
+
+/* -- Panel de lectura compartido (carta de bienvenida, instrucciones):
+      más grande que `.magic-reveal`, con su propio scroll interno si
+      el texto no cabe. Cubre la escena como un velo semitransparente
+      detrás de la hoja, para que el resto del vestíbulo no distraiga
+      mientras se lee. -- */
+.reading-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: rgba(2, 3, 8, 0.72);
+}
+
+.reading-panel[hidden] {
+  display: none;
+}
+
+.reading-panel__sheet {
+  position: relative;
+  width: 100%;
+  max-width: 36rem;
+  max-height: 82vh;
+  overflow-y: auto;
+  padding: var(--space-6) var(--space-6);
+  background: linear-gradient(160deg, var(--color-parchment) 0%, var(--color-parchment-dim) 100%);
+  border-radius: var(--radius-md);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  animation: reading-panel-open var(--duration-slow) var(--ease-standard) both;
+}
+
+@keyframes reading-panel-open {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-panel__sheet {
+    animation: none;
+  }
+}
+
+.reading-panel__close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a3420;
+  font-size: 1.3rem;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+}
+
+.reading-panel__close:hover,
+.reading-panel__close:focus-visible {
+  color: #1c140c;
+  background: rgba(74, 52, 32, 0.12);
+}
+
+/* -- Contenido de la carta: texto oscuro sobre pergamino claro, para
+      mantener buen contraste (el resto del sitio es texto claro sobre
+      fondo oscuro, pero una hoja de papel no debería serlo). -- */
+.letter-sheet {
+  font-family: var(--font-display);
+  color: #2a2013;
+}
+
+/* El resto del sitio es texto claro sobre fondo oscuro, y `typography.css`
+   fija ese color por defecto directamente en `p`/`h1-h3` (no algo que la
+   herencia de `.letter-sheet` pueda ganar). Aquí el fondo es pergamino
+   claro, así que cada elemento de texto necesita su propio color oscuro
+   explícito para tener contraste suficiente. */
+.letter-sheet__salutation {
+  color: #2a2013;
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
+  text-shadow: none;
+}
+
+.letter-sheet p {
+  color: #2a2013;
+  margin-bottom: var(--space-3);
+  line-height: 1.65;
+}
+
+.letter-sheet__finish {
+  margin-top: var(--space-4);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid #7a642a;
+  background: #2a2013;
+  color: var(--color-parchment);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.letter-sheet__finish:hover,
+.letter-sheet__finish:focus-visible {
+  background: #4a3420;
+}
+
+.instructions-sheet {
+  color: #2a2013;
+}
+
+.instructions-sheet__heading {
+  color: #2a2013;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
+  text-transform: none;
+  text-shadow: none;
+  letter-spacing: normal;
+}
+
+.instructions-sheet__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.instructions-sheet__item-title {
+  color: #2a2013;
+  font-family: var(--font-display);
+  font-weight: bold;
+  margin-bottom: var(--space-1);
+}
+
+.instructions-sheet__item-body {
+  color: #4a3420;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+/* -- Mensaje personal (quince fragmentos en primera persona), dentro
+      del mismo `.reading-panel` que ya usan la carta y las
+      instrucciones — comparte su pergamino, pero es deliberadamente
+      su propia identidad visual (ni `.discovery-list`, ni
+      `.card-collection`, ni `.letter-sheet`): esto no es un capítulo,
+      ni un hallazgo, ni un cromo. -- */
+.personal-message {
+  color: #2a2013;
+}
+
+.personal-message__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7a642a;
+  margin-bottom: var(--space-3);
+}
+
+.personal-message__empty {
+  font-family: var(--font-display);
+  font-style: italic;
+  line-height: 1.6;
+  color: #4a3420;
+}
+
+.personal-message__hint {
+  font-size: var(--text-xs);
+  color: #7a642a;
+  margin-bottom: var(--space-3);
+}
+
+.personal-message__text {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-style: italic;
+  line-height: 1.8;
+}
+
+.personal-message__piece {
+  color: #2a2013;
+}
+
+.personal-message__gap {
+  color: #b0a488;
+  letter-spacing: 0.15em;
+}
+
+/* -- Conversación del retrato (Archivo Secreto): mismo pergamino que
+      el resto de paneles grandes (carta, instrucciones, mensaje
+      personal, mecanismo de la polilla), identidad propia. -- */
+.portrait-panel {
+  color: #2a2013;
+}
+
+.portrait-panel__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7a642a;
+  margin-bottom: var(--space-2);
+}
+
+.portrait-panel__heading {
+  color: #2a2013;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  text-transform: none;
+  text-shadow: none;
+  letter-spacing: normal;
+  margin-bottom: var(--space-3);
+}
+
+.portrait-panel__greeting {
+  color: #2a2013;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: var(--space-4);
+}
+
+.portrait-panel__topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.portrait-panel .btn-arcane {
+  border-color: #7a642a;
+  background: rgba(122, 100, 42, 0.12);
+  color: #2a2013;
+}
+
+.portrait-panel .btn-arcane--ghost {
+  background: transparent;
+  color: #4a3420;
+  border-color: rgba(122, 100, 42, 0.4);
+}
+
+.portrait-panel .btn-arcane:hover,
+.portrait-panel .btn-arcane:focus-visible {
+  border-color: #4a3420;
+  box-shadow: none;
+  background: rgba(122, 100, 42, 0.22);
+}
+
+.portrait-panel__response {
+  color: #2a2013;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(122, 100, 42, 0.4);
+  background: rgba(122, 100, 42, 0.06);
+}
+
+/* -- Lista de hallazgos (secretos ya desbloqueados), compartida por la
+      Biblioteca y el Archivo Secreto. `<details>` nativo se encarga de
+      la revelación progresiva: no hace falta JS para abrir/cerrar
+      cada entrada. -- */
+.discovery-list {
+  margin-top: var(--space-5);
+  max-width: 48ch;
+}
+
+.discovery-list__heading {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  color: var(--color-silver-bright);
+  margin-bottom: var(--space-3);
+}
+
+.discovery-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.discovery-list__item {
+  list-style: none;
+}
+
+.discovery-list__entry {
+  border: 1px dashed rgba(201, 162, 87, 0.35);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  background: rgba(8, 10, 18, 0.45);
+}
+
+.discovery-list__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  color: var(--color-gold-bright);
+  font-size: var(--text-sm);
+}
+
+.discovery-list__icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+}
+
+.discovery-list__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.discovery-list__body {
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* -- Revelación mágica breve y compartida (Mapa, Sala de los
+      Menesteres): un panel flotante con UNA sola línea de texto, no
+      una lista. Reutiliza la misma animación de entrada que el acierto
+      de un expediente (`riddle-reveal-burst`, definida en
+      `calendar.css` pero global). -- */
+.magic-reveal {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  z-index: 10;
+  transform: translateX(-50%);
+  max-width: min(32rem, 86vw);
+  padding: var(--space-4) var(--space-5);
+  background: rgba(6, 7, 14, 0.88);
+  border: var(--border-gold);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(4px);
+  animation: riddle-reveal-burst 900ms var(--ease-standard) both;
+}
+
+.magic-reveal[hidden] {
+  display: none;
+}
+
+.magic-reveal:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.magic-reveal__text {
+  color: var(--color-silver-bright);
+  font-size: var(--text-sm);
+  font-style: italic;
+  line-height: 1.6;
+  padding-right: var(--space-5);
+  white-space: pre-line;
+}
+
+.magic-reveal__close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+}
+
+.magic-reveal__close:hover,
+.magic-reveal__close:focus-visible {
+  color: var(--color-gold-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magic-reveal {
+    animation: none;
+  }
+}
+
+/* -- Colección de cromos de rana de chocolate: identidad propia,
+      distinta de `.discovery-list` (esto no es un registro de pistas
+      del misterio, es una curiosidad coleccionable del mundo mágico).
+      Cada entrada se dibuja como una tarjeta pequeña, no como una fila
+      de lista. -- */
+.card-collection {
+  margin-top: var(--space-5);
+  max-width: 48ch;
+}
+
+.card-collection__heading {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  color: var(--color-gold-bright);
+  margin-bottom: var(--space-1);
+}
+
+.card-collection__hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.card-collection__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.card-collection__item {
+  list-style: none;
+  flex: 1 1 14rem;
+}
+
+.card-collection__entry {
+  height: 100%;
+  border: var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  background: linear-gradient(160deg, rgba(185, 151, 47, 0.12), rgba(8, 10, 18, 0.55));
+}
+
+.card-collection__summary {
+  cursor: pointer;
+  color: var(--color-silver-bright);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+}
+
+.card-collection__body {
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+/* -- Botón "arcano" reutilizable: usado por el formulario de
+      respuesta de los expedientes (`calendarView.js`) y por los
+      controles del mecanismo de «La cerradura de la polilla»
+      (`games/mothLockView.js`). Un único botón genérico, no uno nuevo
+      por cada formulario. -- */
+.btn-arcane {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
+  border: var(--border-gold);
+  background: rgba(185, 151, 47, 0.14);
+  color: var(--color-gold-bright);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: border-color var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard),
+    background var(--duration-base) var(--ease-standard);
+}
+
+.btn-arcane:hover,
+.btn-arcane:focus-visible {
+  border: var(--border-gold-strong);
+  box-shadow: var(--glow-gold);
+}
+
+.btn-arcane--ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: var(--border-subtle);
+}
+
+.btn-arcane--ghost:hover,
+.btn-arcane--ghost:focus-visible {
+  color: var(--color-gold-bright);
+  border: var(--border-gold);
+  box-shadow: none;
+}
 
 /* -- Foco accesible, consistente en todo el proyecto -- */
 :focus {
@@ -14,71 +499,7 @@
   border-radius: var(--radius-sm);
 }
 
-/* -- Pestañas de navegación principal -- */
-.nav-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-pill);
-  border: var(--border-subtle);
-  background: rgba(18, 23, 40, 0.6);
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  transition: border-color var(--duration-base) var(--ease-standard),
-    color var(--duration-base) var(--ease-standard),
-    background var(--duration-base) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
-}
-
-.nav-tab:hover {
-  color: var(--color-silver-bright);
-  border-color: rgba(185, 151, 47, 0.45);
-}
-
-.nav-tab[aria-selected='true'] {
-  color: var(--color-gold-bright);
-  border: var(--border-gold-strong);
-  background: rgba(185, 151, 47, 0.12);
-  box-shadow: var(--glow-gold);
-}
-
-.nav-tab:active {
-  transform: translateY(1px);
-}
-
-.nav-tab__icon {
-  display: inline-flex;
-  width: 1rem;
-  height: 1rem;
-  opacity: 0.85;
-}
-
-.nav-tab__icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* -- Botón de sonido -- */
-.sound-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-  border: var(--border-subtle);
-  background: rgba(18, 23, 40, 0.6);
-  transition: border-color var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-base) var(--ease-standard);
-}
-
-.sound-toggle:hover {
-  border-color: rgba(185, 151, 47, 0.5);
-}
-
+/* -- Botón de sonido (combina con .chrome-btn para el tamaño/posición) -- */
 .sound-toggle[aria-pressed='true'] {
   border: var(--border-gold-strong);
   box-shadow: var(--glow-gold);
@@ -122,47 +543,7 @@
   opacity: 0.25;
 }
 
-/* -- Paneles -- */
-.panel {
-  position: relative;
-  background: var(--surface-panel);
-  border: var(--border-gold);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-panel);
-  padding: var(--space-6);
-}
-
-.panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(160deg, rgba(216, 184, 90, 0.25), transparent 40%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* -- Divisor ornamental -- */
-.ornament-divider {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin: var(--space-5) 0;
-  color: var(--color-gold-dim);
-}
-
-.ornament-divider::before,
-.ornament-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, currentColor, transparent);
-}
-
-/* -- Insignias de estado -- */
+/* -- Insignia "en preparación" -- */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -177,69 +558,6 @@
 .status-badge--pending {
   color: var(--color-parchment-dim);
   border: 1px dashed rgba(201, 187, 156, 0.5);
-}
-
-.status-badge--locked {
-  color: var(--color-silver);
-  border: var(--border-subtle);
-  background: rgba(46, 78, 140, 0.15);
-}
-
-.status-badge--ready {
-  color: var(--color-success);
-  border: 1px solid rgba(90, 155, 114, 0.5);
-}
-
-/* -- Botón ornamental genérico -- */
-.btn-arcane {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-sm);
-  border: var(--border-gold);
-  background: rgba(185, 151, 47, 0.08);
-  color: var(--color-gold-bright);
-  font-size: var(--text-sm);
-  letter-spacing: 0.04em;
-  transition: background var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-base) var(--ease-standard);
-}
-
-.btn-arcane:hover {
-  background: rgba(185, 151, 47, 0.16);
-  box-shadow: var(--glow-gold);
-}
-
-/* -- Enlace discreto (carta de bienvenida, etc.) -- */
-.link-discreet {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  letter-spacing: 0.03em;
-  border-bottom: 1px dotted transparent;
-  transition: color var(--duration-base) var(--ease-standard),
-    border-color var(--duration-base) var(--ease-standard);
-}
-
-.link-discreet__icon {
-  display: inline-flex;
-  width: 1rem;
-  height: 1rem;
-  opacity: 0.8;
-}
-
-.link-discreet__icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.link-discreet:hover,
-.link-discreet:focus-visible {
-  color: var(--color-gold-bright);
-  border-color: rgba(216, 184, 90, 0.5);
 }
 
 /* -- Estados deshabilitados -- */

@@ -3,30 +3,12 @@
    que no encajan naturalmente dentro de cada componente.
    ========================================================================== */
 
-/* Evita desbordes horizontales accidentales en pantallas muy angostas */
-@media (max-width: 360px) {
-  .site-header__title-sub {
-    display: none;
-  }
-
-  .hero__title {
-    font-size: var(--text-xl);
-  }
-}
-
 /* En pantallas táctiles, asegura objetivos de toque cómodos */
 @media (pointer: coarse) {
-  .nav-tab,
-  .btn-arcane,
-  .sound-toggle {
+  .chrome-btn,
+  .hotspot {
+    min-width: 2.75rem;
     min-height: 2.75rem;
   }
 }
 
-/* Pantallas amplias: más aire alrededor del contenido */
-@media (min-width: 1280px) {
-  .view-stage {
-    padding-top: var(--space-7);
-    padding-bottom: var(--space-8);
-  }
-}

@@ -1,0 +1,410 @@
+/* ==========================================================================
+   Sistema de transiciones cinematográficas — cada variante cubre la
+   pantalla por completo antes de que el router cambie de escena, y se
+   abre después para revelarla. Nunca hay un corte instantáneo visible.
+   ========================================================================== */
+
+.t-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-transition);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.t-overlay.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* -------------------------------------------------------------------- */
+/* Puerta: dos hojas que se cierran para cubrir y se abren para revelar  */
+/* -------------------------------------------------------------------- */
+
+.t-door {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.t-door__panel {
+  flex: 1;
+  background: linear-gradient(180deg, #241a3a 0%, #120d1f 100%);
+  border-left: 1px solid rgba(185, 151, 47, 0.3);
+  border-right: 1px solid rgba(185, 151, 47, 0.3);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.6);
+}
+
+.t-door__panel--left {
+  transform: translateX(-105%);
+}
+
+.t-door__panel--right {
+  transform: translateX(105%);
+}
+
+.t-door__seam {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--color-gold-bright);
+  box-shadow: 0 0 24px 6px rgba(216, 184, 90, 0.65);
+  opacity: 0;
+}
+
+.t-overlay.is-covering[data-variant='door'] .t-door__panel--left {
+  animation: door-panel-in-left var(--cover-duration) var(--ease-standard) forwards;
+}
+.t-overlay.is-covering[data-variant='door'] .t-door__panel--right {
+  animation: door-panel-in-right var(--cover-duration) var(--ease-standard) forwards;
+}
+.t-overlay.is-covering[data-variant='door'] .t-door__seam {
+  animation: door-seam-glow var(--cover-duration) ease-in forwards;
+}
+.t-overlay.is-revealing[data-variant='door'] .t-door__panel--left {
+  animation: door-panel-out-left var(--reveal-duration) var(--ease-standard) forwards;
+}
+.t-overlay.is-revealing[data-variant='door'] .t-door__panel--right {
+  animation: door-panel-out-right var(--reveal-duration) var(--ease-standard) forwards;
+}
+
+@keyframes door-panel-in-left {
+  from {
+    transform: translateX(-105%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes door-panel-in-right {
+  from {
+    transform: translateX(105%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes door-panel-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-105%);
+  }
+}
+@keyframes door-panel-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(105%);
+  }
+}
+@keyframes door-seam-glow {
+  0% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------------------- */
+/* Panel deslizante: una losa que atraviesa la pantalla de lado a lado   */
+/* -------------------------------------------------------------------- */
+
+.t-panel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.t-panel__texture {
+  position: absolute;
+  inset: -2px;
+  background: repeating-linear-gradient(90deg, #241b3a 0 3px, #170f28 3px 7px),
+    linear-gradient(180deg, #221a38, #120d1f);
+  transform: translateX(100%);
+}
+
+.t-panel__glint {
+  position: absolute;
+  top: 46%;
+  left: 58%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-gold-bright), transparent 70%);
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.t-overlay.is-covering[data-variant='revealPanel'] .t-panel__texture {
+  animation: panel-in var(--cover-duration) var(--ease-standard) forwards;
+}
+.t-overlay.is-covering[data-variant='revealPanel'] .t-panel__glint {
+  animation: panel-glint-in var(--cover-duration) ease forwards;
+}
+.t-overlay.is-revealing[data-variant='revealPanel'] .t-panel__texture {
+  animation: panel-out var(--reveal-duration) var(--ease-standard) forwards;
+}
+
+@keyframes panel-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes panel-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes panel-glint-in {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* -------------------------------------------------------------------- */
+/* Pergamino: una hoja que se despliega y vuelve a enrollarse            */
+/* -------------------------------------------------------------------- */
+
+.t-scroll {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.t-scroll__sheet {
+  position: absolute;
+  inset: 0;
+  transform-origin: top;
+  transform: scaleY(0.012);
+  background: linear-gradient(180deg, var(--color-parchment) 0%, var(--color-parchment-dim) 100%);
+  box-shadow: inset 0 0 90px rgba(42, 32, 19, 0.45);
+}
+
+.t-overlay.is-covering[data-variant='unfurl'] .t-scroll__sheet {
+  animation: scroll-open var(--cover-duration) var(--ease-standard) forwards;
+}
+.t-overlay.is-revealing[data-variant='unfurl'] .t-scroll__sheet {
+  animation: scroll-close var(--reveal-duration) var(--ease-standard) forwards;
+}
+
+@keyframes scroll-open {
+  from {
+    transform: scaleY(0.012);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes scroll-close {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.012);
+  }
+}
+
+/* -------------------------------------------------------------------- */
+/* Pared viva: se materializa, agrieta una puerta de luz y se abre       */
+/* (inspirada en la Sala de los Menesteres)                              */
+/* -------------------------------------------------------------------- */
+
+.t-wall {
+  position: absolute;
+  inset: 0;
+}
+
+.t-wall__half {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  opacity: 0;
+  background: repeating-linear-gradient(0deg, #241f33 0 26px, #1a1626 26px 28px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0 2px, transparent 2px 64px);
+}
+
+.t-wall__half--left {
+  left: 0;
+}
+.t-wall__half--right {
+  right: 0;
+}
+
+.t-wall__crack {
+  position: absolute;
+  left: 50%;
+  top: 28%;
+  bottom: 28%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--color-silver-bright);
+  opacity: 0;
+  box-shadow: 0 0 26px 6px rgba(216, 184, 90, 0.7);
+}
+
+.t-overlay.is-covering[data-variant='wallShift'] .t-wall__half {
+  animation: wall-materialize var(--cover-duration) ease forwards;
+}
+.t-overlay.is-covering[data-variant='wallShift'] .t-wall__crack {
+  animation: wall-crack-appear var(--cover-duration) ease forwards;
+}
+.t-overlay.is-revealing[data-variant='wallShift'] .t-wall__half--left {
+  animation: wall-open-left var(--reveal-duration) var(--ease-standard) forwards;
+}
+.t-overlay.is-revealing[data-variant='wallShift'] .t-wall__half--right {
+  animation: wall-open-right var(--reveal-duration) var(--ease-standard) forwards;
+}
+.t-overlay.is-revealing[data-variant='wallShift'] .t-wall__crack {
+  animation: wall-crack-widen var(--reveal-duration) ease forwards;
+}
+
+@keyframes wall-materialize {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes wall-crack-appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes wall-open-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 1;
+  }
+}
+@keyframes wall-open-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+@keyframes wall-crack-widen {
+  0% {
+    opacity: 1;
+    width: 2px;
+  }
+  35% {
+    opacity: 1;
+    width: 36px;
+  }
+  100% {
+    opacity: 0;
+    width: 420px;
+  }
+}
+
+/* -------------------------------------------------------------------- */
+/* Niebla y polvo: oscurece, vela el cambio y se disipa (regreso al      */
+/* vestíbulo y variante por defecto)                                     */
+/* -------------------------------------------------------------------- */
+
+.t-fade {
+  position: absolute;
+  inset: 0;
+}
+
+.t-fade__veil {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(10, 12, 22, 0.88), rgba(4, 5, 10, 0.98));
+}
+
+.t-fade__mote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  left: calc(8% + (var(--i) * 11%));
+  top: 62%;
+  opacity: 0;
+  background: var(--color-gold-bright);
+  box-shadow: 0 0 6px 2px rgba(216, 184, 90, 0.55);
+}
+
+.t-overlay.is-covering[data-variant='fade-dust'] .t-fade__veil {
+  animation: fade-veil-in var(--cover-duration) ease forwards;
+}
+.t-overlay.is-covering[data-variant='fade-dust'] .t-fade__mote {
+  animation: fade-mote-rise var(--cover-duration) ease forwards;
+  animation-delay: calc(var(--i) * 30ms);
+}
+.t-overlay.is-revealing[data-variant='fade-dust'] .t-fade__veil {
+  animation: fade-veil-out var(--reveal-duration) ease forwards;
+}
+
+@keyframes fade-veil-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fade-veil-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fade-mote-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  55% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-70px);
+  }
+}
