@@ -99,6 +99,7 @@ export function renderPensadero(section) {
 
     function renderSealed() {
       clearAutoTimer();
+      stageEl.classList.remove('pensadero-scene__stage--photos');
       stageEl.innerHTML = `
         <div class="pensadero-step pensadero-step--sealed">
           <p class="pensadero-step__eyebrow">El Pensadero</p>
@@ -111,6 +112,7 @@ export function renderPensadero(section) {
 
     function renderPoem() {
       clearAutoTimer();
+      stageEl.classList.remove('pensadero-scene__stage--photos');
       stageEl.innerHTML = `
         <div class="pensadero-step pensadero-step--poem">
           ${createPoemMarkup(calendarState)}
@@ -124,6 +126,7 @@ export function renderPensadero(section) {
 
     function renderThreshold() {
       clearAutoTimer();
+      stageEl.classList.remove('pensadero-scene__stage--photos');
       stageEl.innerHTML = `
         <div class="pensadero-step pensadero-step--threshold">
           <p class="pensadero-step__sparkle" aria-hidden="true">✦</p>
@@ -195,6 +198,7 @@ export function renderPensadero(section) {
         renderClosing();
         return;
       }
+      stageEl.classList.add('pensadero-scene__stage--photos');
       stageEl.innerHTML = `
         <div class="pensadero-step pensadero-step--photos">
           <div class="pensadero-photo-frame">
@@ -221,6 +225,7 @@ export function renderPensadero(section) {
 
     function renderClosing() {
       clearAutoTimer();
+      stageEl.classList.remove('pensadero-scene__stage--photos');
       stageEl.innerHTML = `
         <div class="pensadero-step pensadero-step--closing">
           <p class="pensadero-step__sparkle" aria-hidden="true">✦</p>

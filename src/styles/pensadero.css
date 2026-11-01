@@ -120,6 +120,14 @@
   text-align: center;
 }
 
+/* -- Paso de fotos: marco mucho más grande, pensado para ocupar la
+      mayor parte vertical de la pantalla posible (en vez del ancho
+      fijo de los pasos de texto). -- */
+.pensadero-scene__stage--photos {
+  width: min(95vw, 50rem);
+  max-height: 94vh;
+}
+
 .pensadero-step {
   animation: pensadero-step-in 900ms var(--ease-standard) both;
 }
@@ -209,6 +217,14 @@
   background: rgba(0, 0, 0, 0.3);
   margin-bottom: var(--space-3);
   animation: pensadero-frame-glow 4s ease-in-out infinite;
+}
+
+/* -- En el paso de fotos, el marco deja de regirse por un aspect-ratio
+      fijo y crece hasta ocupar casi toda la altura disponible: así las
+      fotos (muchas verticales, de celular) se ven grandes de verdad. -- */
+.pensadero-scene__stage--photos .pensadero-photo-frame {
+  aspect-ratio: auto;
+  height: min(74dvh, 50rem);
 }
 
 @keyframes pensadero-frame-glow {
