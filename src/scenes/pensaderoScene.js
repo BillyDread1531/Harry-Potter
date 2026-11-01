@@ -25,7 +25,7 @@ const BACKGROUND_SRC = {
 };
 
 const PHOTOS_DIR = '/assets/pensadero';
-const MAX_PHOTOS = 40;
+const MAX_PHOTOS = 80;
 const EXTENSIONS = ['jpg', 'png'];
 const AUTO_ADVANCE_MS = 6000;
 
@@ -145,8 +145,14 @@ export function renderPensadero(section) {
       scheduleAutoAdvance();
     }
 
-    function renderPhotos() {
+    async function renderPhotos() {
       clearAutoTimer();
+      // La detección de fotos corre desde que se monta la escena, pero
+      // puede no haber terminado si Andrea avanza rápido por el poema
+      // — se espera aquí, en vez de asumir "sin fotos" por una carrera.
+      stageEl.innerHTML = `<div class="pensadero-step"><p class="pensadero-step__text">Buscando recuerdos…</p></div>`;
+      photos = await photosPromise;
+      if (controller.signal.aborted) return;
       if (photos.length === 0) {
         renderClosing();
         return;
@@ -183,10 +189,7 @@ export function renderPensadero(section) {
     }
 
     renderSealed();
-    detectPhotos({ signal: controller.signal }).then((found) => {
-      if (controller.signal.aborted) return;
-      photos = found;
-    });
+    const photosPromise = detectPhotos({ signal: controller.signal });
 
     return () => {
       clearAutoTimer();
