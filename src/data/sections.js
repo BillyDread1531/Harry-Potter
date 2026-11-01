@@ -99,8 +99,24 @@ export function isReachable(id, referenceInstant = new Date()) {
   const section = getSectionById(id);
   if (!section) return false;
   if (section.id === 'pensadero') {
+    if (isDevPensaderoUnlockEnabled()) return true;
     const unlock = getUnlockInstant(15);
     return Boolean(unlock) && referenceInstant.getTime() >= unlock.getTime();
   }
   return true;
+}
+
+/**
+ * Atajo de prueba solo para `npm run dev`: se activa a mano desde la
+ * consola del navegador con `localStorage.setItem('hogwarts:devUnlockPensadero', 'true')`.
+ * `import.meta.env?.DEV` es `false` en el build de producción, así que
+ * esta rama queda eliminada del bundle que se sube a internet.
+ */
+function isDevPensaderoUnlockEnabled() {
+  if (!import.meta.env?.DEV) return false;
+  try {
+    return localStorage.getItem('hogwarts:devUnlockPensadero') === 'true';
+  } catch {
+    return false;
+  }
 }

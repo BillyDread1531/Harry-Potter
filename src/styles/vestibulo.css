@@ -197,8 +197,8 @@
   position: absolute;
   left: 50%;
   top: 78%;
-  width: 28%;
-  max-width: 320px;
+  width: 36%;
+  max-width: 400px;
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
 }
@@ -373,8 +373,8 @@
   position: absolute;
   left: 49%;
   top: 29%;
-  width: 7%;
-  max-width: 90px;
+  width: 12%;
+  max-width: 140px;
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
   z-index: 9;
@@ -400,7 +400,7 @@
   .vestibulo-scene__owl {
     left: 50%;
     top: 26%;
-    width: 11%;
+    width: 18%;
   }
 
   .vestibulo-scene__hotspot--owl {
@@ -579,7 +579,7 @@
      choque con el retrato también ocurría en escritorio). */
   .vestibulo-scene__creatures .creature {
     left: 50%;
-    top: 76%;
-    width: 24%;
+    top: 74%;
+    width: 32%;
   }
 }

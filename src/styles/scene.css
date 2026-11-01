@@ -230,7 +230,7 @@
       escritorio el texto vive en una columna angosta junto a la foto,
       no encima de ella, así que este problema no se da. -- */
 @media (max-width: 640px) {
-  .scene-frame__content {
+  .scene-frame--archivo .scene-frame__content {
     max-height: 72vh;
     overflow-y: auto;
     overscroll-behavior: contain;
