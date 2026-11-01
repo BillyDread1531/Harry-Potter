@@ -29,8 +29,11 @@ const MAX_PHOTOS = 80;
 const EXTENSIONS = ['jpg', 'png'];
 const AUTO_ADVANCE_MS = 6000;
 
+const THRESHOLD_TEXT =
+  'El Pensadero se llena de una luz líquida, plateada, que respira como agua despierta. Inclínate sobre el borde: cada recuerdo flota ahí abajo, esperando a que alguien vuelva a mirarlo.';
+
 const CLOSING_TEXT =
-  'El Pensadero se aquieta. Lo que acabas de ver no fueron solo recuerdos guardados — fueron quince noches, un castillo que nunca dejó de prestar atención, y todas las veces que decidiste seguir buscando. Feliz cumpleaños, Andrea. Gracias por llegar hasta aquí.';
+  'El Pensadero se aquieta otra vez, y la plata vuelve a dormir en su copa de piedra. Esto que viste —quince noches, un castillo entero conteniendo la respiración solo para ti— es apenas un recuerdo más que guardar. La aventura que empezó aquí no termina con este último destello: sigue afuera, en cada mañana ordinaria que decidamos hechizar juntos, en los años que todavía no viven en ningún frasco de memoria. Feliz cumpleaños, mi bruja favorita. Esto fue solo el primer hechizo. Te amo, hoy y en cada vida que nos quede por inventar.';
 
 async function detectPhotos({ signal } = {}) {
   const checks = Array.from({ length: MAX_PHOTOS }, (_, i) => {
@@ -69,6 +72,8 @@ export function renderPensadero(section) {
       <div class="pensadero-scene__backdrop" aria-hidden="true">
         ${createSceneBackgroundMarkup()}
         <div class="pensadero-scene__mist" aria-hidden="true"></div>
+        <div class="pensadero-scene__mist pensadero-scene__mist--wisps" aria-hidden="true"></div>
+        <div class="pensadero-scene__sparkles" aria-hidden="true"></div>
       </div>
       <div class="pensadero-scene__stage" data-pensadero-stage></div>
     </section>
@@ -114,6 +119,20 @@ export function renderPensadero(section) {
       `;
       stageEl
         .querySelector('[data-pensadero-continue]')
+        ?.addEventListener('click', () => renderThreshold(), { signal: controller.signal });
+    }
+
+    function renderThreshold() {
+      clearAutoTimer();
+      stageEl.innerHTML = `
+        <div class="pensadero-step pensadero-step--threshold">
+          <p class="pensadero-step__sparkle" aria-hidden="true">✦</p>
+          <p class="pensadero-step__text">${THRESHOLD_TEXT}</p>
+          <button type="button" class="btn-arcane" data-pensadero-descend>Sumergirme en los recuerdos</button>
+        </div>
+      `;
+      stageEl
+        .querySelector('[data-pensadero-descend]')
         ?.addEventListener('click', () => renderPhotos(), { signal: controller.signal });
     }
 
@@ -123,6 +142,8 @@ export function renderPensadero(section) {
       autoTimer = setTimeout(() => showPhoto(photoIndex + 1), AUTO_ADVANCE_MS);
     }
 
+    let firstPhotoShown = false;
+
     function showPhoto(nextIndex) {
       if (nextIndex >= photos.length) {
         renderClosing();
@@ -130,16 +151,33 @@ export function renderPensadero(section) {
       }
       photoIndex = Math.max(0, nextIndex);
       const imgEl = stageEl.querySelector('[data-pensadero-photo]');
+      const bgEl = stageEl.querySelector('[data-pensadero-photo-bg]');
       const counterEl = stageEl.querySelector('[data-pensadero-counter]');
+      const src = photos[photoIndex];
+
+      function applySrc() {
+        imgEl.src = src;
+        if (bgEl) bgEl.src = src;
+      }
+
       if (imgEl) {
-        imgEl.classList.remove('pensadero-photo--visible');
-        setTimeout(
-          () => {
-            imgEl.src = photos[photoIndex];
-            imgEl.classList.add('pensadero-photo--visible');
-          },
-          reducedMotion ? 0 : 350
-        );
+        if (reducedMotion || !firstPhotoShown) {
+          applySrc();
+          imgEl.classList.add('pensadero-photo--visible');
+          bgEl?.classList.add('pensadero-photo--visible');
+          firstPhotoShown = true;
+        } else {
+          // Imita la superficie del Pensadero real: el recuerdo anterior
+          // se disuelve en un remolino de plata antes de que el nuevo
+          // emerja del mismo remolino, en vez de un simple fundido.
+          imgEl.classList.remove('pensadero-photo--swirl-in');
+          imgEl.classList.add('pensadero-photo--swirl-out');
+          setTimeout(() => {
+            applySrc();
+            imgEl.classList.remove('pensadero-photo--swirl-out');
+            imgEl.classList.add('pensadero-photo--swirl-in');
+          }, 420);
+        }
       }
       if (counterEl) counterEl.textContent = `${photoIndex + 1} / ${photos.length}`;
       scheduleAutoAdvance();
@@ -160,6 +198,7 @@ export function renderPensadero(section) {
       stageEl.innerHTML = `
         <div class="pensadero-step pensadero-step--photos">
           <div class="pensadero-photo-frame">
+            <img class="pensadero-photo-bg" data-pensadero-photo-bg alt="" aria-hidden="true" />
             <img class="pensadero-photo" data-pensadero-photo alt="" />
           </div>
           <p class="pensadero-photo-counter" data-pensadero-counter aria-live="polite"></p>
@@ -176,6 +215,7 @@ export function renderPensadero(section) {
         .querySelector('[data-pensadero-next]')
         ?.addEventListener('click', () => showPhoto(photoIndex + 1), { signal: controller.signal });
       photoIndex = -1;
+      firstPhotoShown = false;
       showPhoto(0);
     }
 
@@ -183,6 +223,7 @@ export function renderPensadero(section) {
       clearAutoTimer();
       stageEl.innerHTML = `
         <div class="pensadero-step pensadero-step--closing">
+          <p class="pensadero-step__sparkle" aria-hidden="true">✦</p>
           <p class="pensadero-step__text">${CLOSING_TEXT}</p>
         </div>
       `;
