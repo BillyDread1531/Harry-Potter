@@ -15,7 +15,8 @@ export function createSceneBackgroundMarkup({ depth = -3 } = {}) {
       data-depth="${depth}"
       alt=""
       aria-hidden="true"
-      loading="lazy"
+      loading="eager"
+      fetchpriority="high"
     />
   `;
 }

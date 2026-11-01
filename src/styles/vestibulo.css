@@ -196,9 +196,9 @@
 .vestibulo-scene__creatures .creature {
   position: absolute;
   left: 50%;
-  top: 56%;
-  width: 18%;
-  max-width: 220px;
+  top: 78%;
+  width: 28%;
+  max-width: 320px;
   aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
 }
@@ -579,7 +579,7 @@
      choque con el retrato también ocurría en escritorio). */
   .vestibulo-scene__creatures .creature {
     left: 50%;
-    top: 55%;
-    width: 15%;
+    top: 76%;
+    width: 24%;
   }
 }
