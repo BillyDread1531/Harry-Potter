@@ -864,7 +864,8 @@ span.hotspot__glow.hotspot__glow--discovery-burst {
 }
 
 .creature__video,
-.creature__still {
+.creature__still,
+.creature__canvas {
   display: block;
   width: 100%;
   height: 100%;
@@ -877,6 +878,7 @@ span.hotspot__glow.hotspot__glow--discovery-burst {
    ahora sí definido tamaño de `.creature`) y empujaría al otro hacia
    abajo, como ocurría con el retrato antes de este arreglo. */
 .creature__video[hidden],
-.creature__still[hidden] {
+.creature__still[hidden],
+.creature__canvas[hidden] {
   display: none;
 }

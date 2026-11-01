@@ -1,5 +1,3 @@
-import { assetExists } from '../utils/assetProbe.js';
-
 const MOBILE_QUERY = '(max-width: 640px)';
 
 /**
@@ -59,21 +57,15 @@ export function mountSceneBackground(root, { desktopSrc, mobileSrc }, { signal }
     listenerOptions
   );
 
-  async function applyBestSource() {
+  function applyBestSource() {
     const targetSrc = mobileQuery.matches ? mobileSrc : desktopSrc;
     if (targetSrc === currentSrc) return;
     currentSrc = targetSrc;
-
-    const exists = await assetExists(targetSrc, { signal });
-    if (signal?.aborted) return; // la escena se desmontó mientras comprobábamos
-    if (currentSrc !== targetSrc) return; // el viewport cambió mientras comprobábamos
-
-    if (!exists) {
-      imgEl.removeAttribute('src');
-      root.classList.remove('has-photo-background');
-      root.classList.add('is-photo-missing');
-      return;
-    }
+    // Se asigna directo, sin comprobar antes con una petición HEAD aparte:
+    // esa comprobación previa duplicaba la espera (una ida y vuelta de
+    // red solo para confirmar que existe, y luego otra para traerla de
+    // verdad). El propio `<img>` ya informa si falla, vía el listener
+    // `error` de arriba.
     imgEl.src = targetSrc;
   }
 

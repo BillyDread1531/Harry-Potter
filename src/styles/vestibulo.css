@@ -281,6 +281,24 @@
   top: 72%;
 }
 
+.vestibulo-scene__hotspot--pensadero {
+  left: 50%;
+  top: 55%;
+}
+
+/* -- El Pensadero es lo único del Vestíbulo que debe notarse de
+      inmediato en cuanto exista: nunca "mystery", siempre con el pulso
+      más visible ya usado por los minijuegos (`hotspot-breathe`). -- */
+.vestibulo-scene__hotspot--pensadero-glow .hotspot__glow {
+  animation: hotspot-breathe 3.2s ease-in-out infinite;
+}
+
+.vestibulo-scene__hotspot--pensadero-glow:hover .hotspot__glow,
+.vestibulo-scene__hotspot--pensadero-glow:focus-visible .hotspot__glow {
+  opacity: 1;
+  animation-play-state: paused;
+}
+
 /* -- El sobre, dibujado en SVG dentro del propio hotspot (ver
       `createEnvelopeMarkup` en vestibuloScene.js) -- */
 .letter-envelope {
@@ -507,6 +525,11 @@
   .vestibulo-scene__hotspot--instructions {
     left: 70%;
     top: 90%;
+  }
+
+  .vestibulo-scene__hotspot--pensadero {
+    left: 50%;
+    top: 46%;
   }
 
   .vestibulo-scene__hotspot--biblioteca {

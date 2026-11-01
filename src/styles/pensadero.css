@@ -1,0 +1,170 @@
+/* ==========================================================================
+   El Pensadero — la escena final. Sin `.scene-frame` compartido (no
+   tiene eyebrow/título/registro): es, a propósito, una composición
+   propia, más cinematográfica, pantalla completa.
+   ========================================================================== */
+
+.pensadero-scene {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #05040a;
+}
+
+.pensadero-scene__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.pensadero-scene__backdrop .scene-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 900ms var(--ease-standard);
+}
+
+.pensadero-scene__backdrop.has-photo-background .scene-photo {
+  opacity: 1;
+}
+
+/* -- Niebla plateada procedimental: siempre visible (debajo o encima
+      de la foto real, según exista), para que la sala nunca se sienta
+      vacía mientras no haya fondo fotográfico propio. -- */
+.pensadero-scene__mist {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 40%, rgba(180, 200, 230, 0.22), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(10, 12, 24, 0.9), transparent),
+    linear-gradient(180deg, #0a0d1a 0%, #050408 100%);
+  animation: pensadero-mist-drift 14s ease-in-out infinite alternate;
+}
+
+@keyframes pensadero-mist-drift {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.08) translateY(-1.5%);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pensadero-scene__mist {
+    animation: none;
+  }
+}
+
+.pensadero-scene__stage {
+  position: relative;
+  z-index: 2;
+  width: min(90vw, 40rem);
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+}
+
+.pensadero-step {
+  animation: pensadero-step-in 900ms var(--ease-standard) both;
+}
+
+@keyframes pensadero-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pensadero-step {
+    animation: none;
+  }
+}
+
+.pensadero-step__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gold-bright);
+  margin-bottom: var(--space-4);
+}
+
+.pensadero-step__text {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--color-silver-bright);
+  margin-bottom: var(--space-5);
+}
+
+.pensadero-poem__text {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  line-height: 1.9;
+  color: var(--color-silver-bright);
+  margin-bottom: var(--space-6);
+}
+
+.pensadero-poem__piece {
+  color: var(--color-gold-bright);
+}
+
+.pensadero-poem__gap {
+  opacity: 0.35;
+}
+
+.pensadero-photo-frame {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: var(--border-gold);
+  background: rgba(0, 0, 0, 0.3);
+  margin-bottom: var(--space-3);
+}
+
+.pensadero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 500ms var(--ease-standard);
+}
+
+.pensadero-photo--visible {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pensadero-photo {
+    transition: none;
+  }
+}
+
+.pensadero-photo-counter {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.pensadero-photo-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+}

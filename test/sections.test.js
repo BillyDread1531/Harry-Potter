@@ -16,11 +16,10 @@ describe('data/sections.js', () => {
     }
   });
 
-  test('el Pensadero existe en los datos pero no es alcanzable', () => {
-    const pensadero = getSectionById('pensadero');
-    assert.ok(pensadero, 'el Pensadero debe seguir preparado en los datos');
-    assert.equal(pensadero.hidden, true);
-    assert.equal(isReachable('pensadero'), false);
+  test('el Pensadero solo es alcanzable a partir del 15 de noviembre a las 20:00 (Guatemala)', () => {
+    assert.ok(getSectionById('pensadero'));
+    assert.equal(isReachable('pensadero', new Date('2026-11-16T01:59:59.000Z')), false); // 19:59 Guatemala (UTC-6)
+    assert.equal(isReachable('pensadero', new Date('2026-11-16T02:00:00.000Z')), true); // 20:00 Guatemala
   });
 
   test('un id inexistente no es alcanzable y no revienta', () => {

@@ -16,6 +16,7 @@ import { getOwlLine } from '../discoveries/owlContent.js';
 import { getColdDraftPhase } from '../discoveries/coldDraftContent.js';
 import { getSolvedDays } from '../calendar/discoveries.js';
 import { loadProgress } from '../calendar/calendarStorage.js';
+import { isReachable } from '../data/sections.js';
 
 const DUMBLEDORE_CARD = getCardById('dumbledore');
 
@@ -69,6 +70,7 @@ export function renderVestibulo(section, { onNavigate } = {}) {
   const coldDraftResolved = getColdDraftPhase(castleSecrets) === 'resolved';
   const solvedDays = getSolvedDays(loadProgress());
   const highestSolvedDay = solvedDays.size ? Math.max(...solvedDays) : 0;
+  const pensaderoUnlocked = isReachable('pensadero');
 
   const html = `
     <section class="vestibulo-scene" data-vestibulo-scene>
@@ -159,6 +161,16 @@ export function renderVestibulo(section, { onNavigate } = {}) {
         label: 'Algo en este muro no es lo que parece',
         className: 'hotspot hotspot--mystery vestibulo-scene__hotspot vestibulo-scene__hotspot--desafios'
       })}
+      ${
+        pensaderoUnlocked
+          ? createHotspot({
+              id: 'pensadero',
+              icon: 'basin',
+              label: 'El Pensadero te espera',
+              className: 'hotspot vestibulo-scene__hotspot vestibulo-scene__hotspot--pensadero vestibulo-scene__hotspot--pensadero-glow'
+            })
+          : ''
+      }
 
       <div class="vestibulo-scene__creatures" aria-hidden="true">
         ${createCreatureMarkup({ id: 'patronus', label: 'Un Patronus protector', depth: 14 })}

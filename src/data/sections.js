@@ -4,11 +4,13 @@
  * mundo (no una pestaña), con la variante de transición cinematográfica
  * que debe reproducirse al entrar.
  *
- * `hidden: true` significa que el lugar existe en la arquitectura pero
- * todavía no se revela en la interfaz ni es alcanzable por navegación
- * directa: así queda preparado el Pensadero para una fase posterior
- * sin anunciar su existencia ahora.
+ * El Pensadero es distinto: no es `hidden` de forma fija, se desbloquea
+ * solo, en tiempo real, el 15 de noviembre a las 20:00 hora de
+ * Guatemala — mismo instante que ya calcula `calendarEngine.getUnlockInstant(15)`
+ * para el último expediente (el caso especial de las 20:00 en vez de
+ * medianoche ya vive ahí, no se duplica aquí).
  */
+import { getUnlockInstant } from '../calendar/calendarEngine.js';
 
 export const SECTIONS = [
   {
@@ -83,7 +85,6 @@ export const SECTIONS = [
     icon: 'basin',
     transitionVariant: 'fade-dust',
     title: 'El Pensadero',
-    hidden: true,
     unlockLabel: '15 de noviembre de 2026 · 8:00 p. m. (hora de Guatemala)'
   }
 ];
@@ -94,7 +95,12 @@ export function getSectionById(id) {
   return SECTIONS.find((section) => section.id === id);
 }
 
-export function isReachable(id) {
+export function isReachable(id, referenceInstant = new Date()) {
   const section = getSectionById(id);
-  return Boolean(section) && !section.hidden;
+  if (!section) return false;
+  if (section.id === 'pensadero') {
+    const unlock = getUnlockInstant(15);
+    return Boolean(unlock) && referenceInstant.getTime() >= unlock.getTime();
+  }
+  return true;
 }
