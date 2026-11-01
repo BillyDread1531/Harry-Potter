@@ -299,6 +299,49 @@
   animation-play-state: paused;
 }
 
+/* -- La insignia del Pensadero no usa el icono pequeño y neutro de los
+      demás rincones: es más grande, con un aro dorado y niebla
+      plateada que respira dentro del círculo, para que se note de
+      inmediato que es algo distinto en cuanto se desbloquea. -- */
+.vestibulo-scene__hotspot--pensadero .hotspot__badge-icon {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0.5rem;
+  background: radial-gradient(circle at 50% 38%, rgba(180, 200, 255, 0.4), rgba(7, 9, 16, 0.88) 72%);
+  border: 1px solid rgba(201, 169, 97, 0.8);
+  box-shadow: 0 0 10px rgba(180, 200, 255, 0.45), 0 0 20px rgba(201, 169, 97, 0.3);
+  color: #dfe6f5;
+  position: relative;
+}
+
+.vestibulo-scene__hotspot--pensadero .hotspot__badge-icon::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(180, 200, 255, 0.55), transparent 70%);
+  animation: pensadero-badge-mist 2.6s ease-in-out infinite;
+}
+
+@keyframes pensadero-badge-mist {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vestibulo-scene__hotspot--pensadero .hotspot__badge-icon::before {
+    animation: none;
+  }
+}
+
 /* -- El sobre, dibujado en SVG dentro del propio hotspot (ver
       `createEnvelopeMarkup` en vestibuloScene.js) -- */
 .letter-envelope {
