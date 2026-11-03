@@ -114,13 +114,11 @@ Mi elección puede revelar una inclinación, pero no escribe por completo el fut
     day: 4,
     title: 'Lo que no se deja atrapar',
     caseLabel: 'RASTRO INCOMPLETO',
-    body: `Soy pequeña, pero puedo decidir el final de una búsqueda enorme.
+    body: `No fui forjada por un herrero común, sino por manos que juraron nunca revelar mi nombre a quien me encargó.
 
-Mi cuerpo reluce como si guardara un fragmento de sol, y a mis costados nacen dos movimientos que nunca descansan.
+No crezco ni envejezco, pero llevo dentro una memoria más fiel que la de cualquier retrato parlante: recuerdo una sola piel, la primera que me rozó, aunque pasen décadas antes de que alguien vuelva a tocarme.
 
-No basta con correr detrás de mí: hace falta paciencia, precisión y saber reconocer el instante correcto.
-
-Y cuando por fin me alcanzan, no siempre se revela de inmediato todo lo que guardo.
+Cientos me persiguen a la vez, y sin embargo decido, sin que nadie me lo ordene, ante quién dejarme atrapar — y a veces ese instante decide algo mucho más grande que un simple juego.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Snitch dorada',
@@ -142,13 +140,13 @@ Y cuando por fin me alcanzan, no siempre se revela de inmediato todo lo que guar
     day: 5,
     title: 'Los pasos que no deberían verse',
     caseLabel: 'REGISTRO CONFIDENCIAL',
-    body: `Mi superficie parece guardar únicamente líneas y espacios, pero sé mucho más de lo que aparento.
+    body: `Cuatro firmas distintas me reclaman como suyo, pero ninguna de las cuatro fue quien me entregó, con años de diferencia, a su heredero legítimo.
 
-No necesito ojos para reconocer a quien camina por un lugar escondido, ni voz para delatar movimientos que alguien preferiría mantener en secreto.
+No hablo con cualquiera: respondo a una jura de buenas intenciones y me cierro ante una despedida que suena a lo contrario.
 
-Conozco pasadizos, recorridos y presencias; puedo convertir un castillo conocido en un laberinto lleno de posibilidades.
+En mis líneas vive, sin nombre propio durante años, alguien que el mundo entero daba por muerto — escondido bajo otro nombre, en otra forma, bajo cuatro patas.
 
-Pero mi verdadero poder despierta cuando alguien sabe cómo hacerme hablar.
+No soy yo quien se mueve: son puntos diminutos sobre mi piel los que nunca dejan de hacerlo, incluso cuando duermen.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Mapa del Merodeador',
@@ -170,13 +168,13 @@ Pero mi verdadero poder despierta cuando alguien sabe cómo hacerme hablar.
     day: 6,
     title: 'Lo que desaparece sin marcharse',
     caseLabel: 'AUSENCIA REGISTRADA',
-    body: `Puedo cubrir a alguien sin convertirme en una pared.
+    body: `Nací de un trato hecho a la orilla de un río que no aparece en ningún mapa, con alguien que no suele regatear.
 
-No borro sus pasos ni detengo el ruido que produce; simplemente hago que los ojos ajenos no encuentren aquello que tienen delante.
+De las tres cosas que allí se entregaron, yo fui la única pensada para esconder, no para vencer.
 
-He pasado de mano en mano y mi valor no depende de cuánto brillo tenga, sino de lo que permite hacer sin ser visto.
+Pasé de generación en generación sin testamento ni subasta, hasta llegar a manos de un huérfano que nunca supo, al principio, cuánto valía lo que tenía entre los dedos.
 
-Quien me usa debe recordar que ocultarse no significa dejar de existir.
+Uno de mis antiguos dueños me dejó de lado por voluntad propia, el mismo día en que decidió saludar a la Muerte como a un viejo conocido.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Capa de invisibilidad',
@@ -198,13 +196,13 @@ Quien me usa debe recordar que ocultarse no significa dejar de existir.
     day: 7,
     title: 'Una esencia imposible de confundir',
     caseLabel: 'CLASIFICACIÓN: DESCONOCIDA',
-    body: `No soy una poción para curar una herida ni un remedio para recuperar fuerzas.
+    body: `No me preparan los aprendices sin supervisión, porque un error en mis pasos puede convertirme en otra cosa completamente distinta.
 
-Mi poder se acerca a algo que no siempre obedece a la razón.
+No tengo un solo nombre de aroma: tomo el de aquello que cada quien, en secreto, más desea oler.
 
-Para cada persona puedo tener un aroma distinto, porque no revelo una única esencia: reflejo aquello que despierta un deseo profundo.
+Una vez crucé, sin permiso, de una copa a otra en una fiesta de cumpleaños, y a punto estuve de convertir una celebración en una tragedia.
 
-Quien intenta comprenderme descubre que los sentimientos también pueden dejar una huella invisible.
+Me consideran la más peligrosa y poderosa jamás destilada, y sin embargo ningún ministerio me ha declarado ilegal.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Amortentia',
@@ -226,13 +224,11 @@ Quien intenta comprenderme descubre que los sentimientos también pueden dejar u
     day: 8,
     title: 'La forma de lo que te protege',
     caseLabel: 'MEMORIA PROTEGIDA',
-    body: `No soy un animal común, aunque puedo adoptar su silueta.
+    body: `No soy un hechizo que se aprenda de memoria: exijo un recuerdo tan pleno que algunos, por más que lo intenten, solo logran arrancarme humo.
 
-No nazco de la oscuridad, sino de una luz interior que debe sostenerse incluso cuando todo alrededor parece perdido.
+Mi forma no la elige quien me invoca, sino algo mucho más antiguo que la propia voluntad — y en una sola ocasión conocida, esa forma cambió de un día para otro, el mismo día en que su dueña dejó de mentirse a sí misma sobre lo que sentía.
 
-Mi presencia puede hacer retroceder aquello que se alimenta de la desesperación.
-
-No todos consiguen darme forma: recordar algo feliz no siempre basta si uno no logra aferrarse a ello.
+Sirvo de escudo contra lo que se alimenta del miedo, pero también he cruzado bosques enteros llevando un mensaje que ninguna lechuza se habría atrevido a entregar.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Patronus',
@@ -254,15 +250,15 @@ No todos consiguen darme forma: recordar algo feliz no siempre basta si uno no l
     day: 9,
     title: 'Una palabra contra la oscuridad',
     caseLabel: 'FRAGMENTO RECUPERADO',
-    body: `No soy una llama, pero puedo llenar de claridad un espacio.
+    body: `Soy la primera palabra que aprende quien le teme más a la oscuridad que a cualquier otro hechizo del programa.
 
-No necesito madera, aceite ni una mecha para cumplir mi propósito.
+No hiero, no aturde, no transforma — y quizás por eso casi nadie se detiene a apreciarme.
 
-Mi nombre es breve y mi efecto parece sencillo, aunque en un lugar oscuro puede cambiar por completo lo que eres capaz de descubrir.
+Tengo una hermana que deshace exactamente lo que yo construyo, y entre las dos sostenemos una conversación brevísima que se repite miles de veces al día en un castillo lleno de pasillos sin ventanas.
 
-A veces, el primer paso para encontrar el camino no consiste en avanzar, sino en ver.
+No ilumino caminos nuevos: solo revelo los que ya estaban ahí, esperando que alguien se atreviera a nombrarlos.
 
-¿Qué palabra activa este hechizo?`,
+¿Qué palabra soy?`,
     canonicalAnswer: 'Lumos',
     acceptedVariants: ['lumos', 'hechizo lumos'],
     explanation: 'La palabra breve que no es fuego pero ilumina un espacio oscuro es el hechizo Lumos.',
@@ -281,13 +277,11 @@ A veces, el primer paso para encontrar el camino no consiste en avanzar, sino en
     day: 10,
     title: 'La huella de una mente brillante',
     caseLabel: 'LEGADO EN DISPUTA',
-    body: `No soy un libro, aunque guardo el legado de una inteligencia extraordinaria.
+    body: `Nací para premiar el ingenio, forjada por una de cuatro, pero pasé más siglos perdida que lucida.
 
-No soy una corona real, aunque descanso sobre la cabeza de quien me lleva.
+Quien finalmente me rescató del olvido no lo hizo por admirar la sabiduría que represento, sino siguiendo el rastro de un alma partida en pedazos que ya no cabían en un solo cuerpo.
 
-Mi creadora quiso que aquello que la distinguía no se perdiera con el tiempo; sin embargo, hasta el orgullo más brillante puede dejar una grieta por donde entra la oscuridad.
-
-Mi historia demuestra que un objeto puede conservar una idea y también cargar con las consecuencias de quien quiso poseerla.
+Me escondieron dentro de un busto de piedra, en una sala que solo aparece para quien sabe exactamente qué esconder — la misma sala que terminaría siendo también mi tumba, consumida por un fuego nacido de un rencor entre dos compañeros de casa, y no de ningún hechizo mío.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Diadema de Ravenclaw',
@@ -309,13 +303,11 @@ Mi historia demuestra que un objeto puede conservar una idea y también cargar c
     day: 11,
     title: 'Una libertad inesperada',
     caseLabel: 'NOTA SIN FIRMA',
-    body: `Parezco una prenda sencilla y, sin embargo, mi destino puede cambiar una vida.
+    body: `No me tejieron para quien terminó quedándoseme: llegué escondido dentro de algo que ni siquiera combinaba conmigo, entregado por alguien que pensaba estar tendiendo una trampa a un niño, no un regalo a nadie.
 
-No necesito oro ni una ceremonia para convertirme en símbolo de libertad.
+Una ley tan vieja que nadie recuerda quién la escribió dice que basta con entregarme, aunque sea sin querer, para romper un vínculo que ni la magia más oscura se atreve a deshacer directamente.
 
-En manos equivocadas soy apenas algo que se usa y se desecha; en las correctas puedo significar que alguien deja de pertenecerle a otra persona.
-
-A veces, el objeto más humilde tiene más poder que una orden pronunciada por alguien importante.
+No valgo una sola moneda en ningún mercado, y sin embargo cambié, en un solo gesto, el destino completo de quien dependía de un amo.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Calcetín de Dobby',
@@ -344,13 +336,13 @@ A veces, el objeto más humilde tiene más poder que una orden pronunciada por a
     day: 12,
     title: 'Lo que tres hermanos dejaron repartido',
     caseLabel: 'TRES PIEZAS, UN SOLO EXPEDIENTE',
-    body: `Nací de un cuento que se contaba antes de dormir, y tres hermanos lo convirtieron en una advertencia que todavía se repite.
+    body: `Tres viajeros cruzaron un río que debía haberlos matado, y en lugar de ahogarse, negociaron con quien gobierna a todos los que no logran llegar a la otra orilla.
 
-No soy un solo objeto: somos tres, aunque solo quien conoce el cuento completo sabe que pertenecemos juntos.
+Lo que cada uno pidió dijo más sobre quiénes eran que sobre lo que realmente necesitaban: el primero pidió jamás perder, el segundo pidió deshacer lo que ya no tenía remedio, el tercero pidió, simplemente, dejar de ser hallado.
 
-Uno oculta a quien lo lleva de cualquier mirada, sin volverlo invencible. Otro promete devolver lo que ya se perdió, aunque lo que regresa nunca es idéntico a lo que se fue. El tercero no multiplica el poder de quien lo sostiene: pone a prueba si sabe cuándo dejar de usarlo.
+De los tres regalos, solo uno fue entregado en paz, por su propio dueño, cuando ya era un anciano que había dejado de huir.
 
-Juntos no vencen a la muerte. Como mucho, enseñan a dejar de temerle.
+Juntarnos no es magia poderosa: es, apenas, una manera de dejar de temerle a lo inevitable.
 
 ¿Qué somos?`,
     canonicalAnswer: 'Reliquias de la Muerte',
@@ -373,13 +365,13 @@ Juntos no vencen a la muerte. Como mucho, enseñan a dejar de temerle.
     day: 13,
     title: 'Un lugar que aparece cuando hace falta',
     caseLabel: 'SELLO ROTO',
-    body: `No permanezco igual para todos, ni me encuentro siempre donde alguien espera hallarme.
+    body: `No tengo una forma fija ni una sola puerta: tengo tantas como necesidades distintas se han parado frente a mí a pedir.
 
-Puedo ofrecer refugio, herramientas o un espacio adecuado para una necesidad que otros no conocen.
+He sido campo de entrenamiento para un ejército con nombre de ave, almacén para generaciones enteras de objetos que nadie quiso admitir que poseía, y refugio para quien huía, alguna vez, hasta de sus propios compañeros de casa.
 
-No basta con desear cualquier cosa: quien me busca debe comprender qué le hace falta de verdad.
+Tres vueltas frente a una pared que parece vacía bastan para abrirme — pero solo si quien pide sabe nombrar, con total honestidad, lo que en verdad le falta.
 
-Cuando cumplo mi función, parezco haber estado esperando a que alguien aprendiera a pedirme lo correcto.
+El mismo fuego que casi acaba conmigo también acabó, sin que nadie lo planeara así, con una corona de inteligencia escondida entre mis paredes.
 
 ¿Qué lugar soy?`,
     canonicalAnswer: 'Sala de los Menesteres',
@@ -406,13 +398,13 @@ Cuando cumplo mi función, parezco haber estado esperando a que alguien aprendie
     day: 14,
     title: 'El deseo que te devuelve la mirada',
     caseLabel: 'PIEZA BAJO RESGUARDO',
-    body: `No muestro necesariamente aquello que tienes delante, sino aquello que más anhelas encontrar.
+    body: `Invierte mi nombre, en el idioma en que fui bautizado, y tendrás la respuesta antes de terminar de leer esta pista — aunque eso no te dirá nada todavía sobre lo que realmente hago.
 
-Quien me contempla puede olvidar el mundo real por quedarse frente a una imagen que parece perfecta.
+No devuelvo rostros: devuelvo ausencias disfrazadas de promesas.
 
-No concedo lo que enseño, ni convierto el deseo en destino.
+Un huérfano volvió a pararse frente a mí noche tras noche, hasta que alguien mucho más viejo y sabio que él le advirtió que los hombres se consumen contemplándome, olvidando vivir por mirar lo que nunca tuvieron y quizás nunca tendrán.
 
-Mi peligro está en confundir la promesa de una imagen con la vida que todavía puede construirse fuera de ella.
+Por un tiempo, sin que casi nadie lo supiera, guardé dentro de mi propio reflejo el objeto más buscado de todo un año escolar, invisible para cualquiera que me mirara deseándolo para sí.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Espejo de Oesed',
@@ -434,13 +426,13 @@ Mi peligro está en confundir la promesa de una imagen con la vida que todavía 
     day: 15,
     title: 'Lo que permanece cuando el instante termina',
     caseLabel: 'ÚLTIMO REGISTRO',
-    body: `No soy un espejo que devuelve deseos ni un libro que conserva palabras.
+    body: `Pertenecí a un director que prefería vaciarse la cabeza de vez en cuando antes que cargar con todo al mismo tiempo, como quien se quita un abrigo demasiado pesado para seguir caminando.
 
-En mi interior, lo vivido puede volver a desplegarse ante los ojos de quien se acerca.
+No contengo un recuerdo: soy la puerta por la que un recuerdo puede volver a caminar solo, sin que nadie más lo sostenga.
 
-Puedo guardar pensamientos y recuerdos de una forma que permite observarlos desde fuera, como si el tiempo hubiera dejado una puerta entreabierta.
+Quien se inclina sobre mi superficie no observa desde afuera: cae dentro, de cabeza, como quien se hunde en un agua que en realidad es tiempo líquido.
 
-Pero ninguna imagen sustituye el momento original: su verdadero valor está en lo que nos permite recordar.
+Una vez le mostré a un huérfano el pasado de otro huérfano — el mismo muchacho en que, años después, ese segundo niño terminaría convirtiéndose en el monstruo que el primero debía detener.
 
 ¿Qué soy?`,
     canonicalAnswer: 'Pensadero',
