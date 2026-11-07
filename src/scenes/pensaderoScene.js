@@ -30,7 +30,12 @@ const MUSIC_SRC = '/assets/audio/pensadero-theme.mp3';
 const PHOTOS_DIR = '/assets/pensadero';
 const MAX_PHOTOS = 80;
 const EXTENSIONS = ['jpg', 'png'];
-const AUTO_ADVANCE_MS = 6000;
+// 5.5s por foto × 64 fotos ≈ 5:52 solo en el paso de fotos. La canción
+// dura 6:49 y empieza a sonar desde el sello (antes del poema y del
+// umbral), así que este margen de ~57s deja espacio para el tiempo
+// que tarde en leerse esos dos pasos previos, sin que la música tenga
+// que reiniciarse antes de llegar a la última foto.
+const AUTO_ADVANCE_MS = 5500;
 
 const THRESHOLD_TEXT =
   'El Pensadero se llena de una luz líquida, plateada, que respira como agua despierta. Inclínate sobre el borde: cada recuerdo flota ahí abajo, esperando a que alguien vuelva a mirarlo.';
