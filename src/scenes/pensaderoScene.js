@@ -13,6 +13,7 @@
  * de fotos se salta sin romper nada.
  */
 import { createSceneBackgroundMarkup, mountSceneBackground } from './sceneBackground.js';
+import { playAlternateTrack, restoreMainTrack } from '../components/soundToggle.js';
 import { getCalendarState } from '../calendar/calendarEngine.js';
 import { loadProgress } from '../calendar/calendarStorage.js';
 import { getFragmentsWithStatus } from '../calendar/personalMessageView.js';
@@ -23,6 +24,8 @@ const BACKGROUND_SRC = {
   desktopSrc: '/assets/backgrounds/pensadero-desktop.jpg',
   mobileSrc: '/assets/backgrounds/pensadero-mobile.jpg'
 };
+
+const MUSIC_SRC = '/assets/audio/pensadero-theme.mp3';
 
 const PHOTOS_DIR = '/assets/pensadero';
 const MAX_PHOTOS = 80;
@@ -83,6 +86,7 @@ export function renderPensadero(section) {
     const controller = new AbortController();
     const backdropEl = panelEl.querySelector('.pensadero-scene__backdrop');
     mountSceneBackground(backdropEl, BACKGROUND_SRC, { signal: controller.signal });
+    playAlternateTrack(MUSIC_SRC);
 
     const stageEl = panelEl.querySelector('[data-pensadero-stage]');
     const calendarState = getCalendarState({ referenceInstant: new Date(), progress: loadProgress() });
@@ -240,6 +244,7 @@ export function renderPensadero(section) {
     return () => {
       clearAutoTimer();
       controller.abort();
+      restoreMainTrack();
     };
   }
 

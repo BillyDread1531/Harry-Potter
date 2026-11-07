@@ -1,5 +1,13 @@
 const STORAGE_KEY = 'hogwarts:soundEnabled';
 const MUSIC_SRC = '/assets/audio/theme.mp3';
+const BASE_VOLUME = 0.35;
+const FADE_MS = 500;
+const FADE_STEPS = 10;
+
+let audioEl = null;
+let enabled = false;
+let currentLogicalSrc = MUSIC_SRC;
+let fadeTimer = null;
 
 function readStoredPreference() {
   try {
@@ -9,12 +17,30 @@ function readStoredPreference() {
   }
 }
 
-function writeStoredPreference(enabled) {
+function writeStoredPreference(value) {
   try {
-    localStorage.setItem(STORAGE_KEY, String(enabled));
+    localStorage.setItem(STORAGE_KEY, String(value));
   } catch {
     /* localStorage no disponible (modo privado, etc.): se ignora */
   }
+}
+
+function fadeTo(targetVolume, onDone) {
+  if (!audioEl) return;
+  if (fadeTimer) clearInterval(fadeTimer);
+  const stepMs = FADE_MS / FADE_STEPS;
+  const startVolume = audioEl.volume;
+  const delta = (targetVolume - startVolume) / FADE_STEPS;
+  let step = 0;
+  fadeTimer = setInterval(() => {
+    step += 1;
+    audioEl.volume = Math.max(0, Math.min(1, startVolume + delta * step));
+    if (step >= FADE_STEPS) {
+      clearInterval(fadeTimer);
+      fadeTimer = null;
+      onDone?.();
+    }
+  }, stepMs);
 }
 
 /**
@@ -29,11 +55,11 @@ function writeStoredPreference(enabled) {
 export function initSoundToggle(buttonEl) {
   if (!buttonEl) return;
 
-  const audioEl = new Audio(MUSIC_SRC);
+  audioEl = new Audio(MUSIC_SRC);
   audioEl.loop = true;
-  audioEl.volume = 0.35;
+  audioEl.volume = BASE_VOLUME;
 
-  let enabled = readStoredPreference();
+  enabled = readStoredPreference();
   applyState(buttonEl, enabled);
 
   if (enabled) {
@@ -47,6 +73,8 @@ export function initSoundToggle(buttonEl) {
   buttonEl.addEventListener('click', () => {
     enabled = !enabled;
     if (enabled) {
+      audioEl.src = currentLogicalSrc;
+      audioEl.volume = BASE_VOLUME;
       audioEl.play().catch(() => {
         enabled = false;
       });
@@ -58,11 +86,39 @@ export function initSoundToggle(buttonEl) {
   });
 }
 
-function applyState(buttonEl, enabled) {
-  buttonEl.setAttribute('aria-pressed', String(enabled));
+/**
+ * Cambia la música de fondo a una pista distinta, con un fundido
+ * breve, para mientras dura una escena especial (el Pensadero). No
+ * hace nada audible si el sonido está desactivado, pero igual queda
+ * recordada: si quien visita activa el sonido estando todavía en esa
+ * escena, suena la pista alterna y no la de siempre.
+ */
+export function playAlternateTrack(src) {
+  currentLogicalSrc = src;
+  if (!audioEl || !enabled) return;
+  fadeTo(0, () => {
+    audioEl.src = src;
+    audioEl.play().catch(() => {});
+    fadeTo(BASE_VOLUME);
+  });
+}
+
+/** Vuelve a la música principal (ver `playAlternateTrack`). */
+export function restoreMainTrack() {
+  currentLogicalSrc = MUSIC_SRC;
+  if (!audioEl || !enabled) return;
+  fadeTo(0, () => {
+    audioEl.src = MUSIC_SRC;
+    audioEl.play().catch(() => {});
+    fadeTo(BASE_VOLUME);
+  });
+}
+
+function applyState(buttonEl, isEnabled) {
+  buttonEl.setAttribute('aria-pressed', String(isEnabled));
   buttonEl.setAttribute(
     'aria-label',
-    enabled ? 'Silenciar sonido ambiental' : 'Activar sonido ambiental'
+    isEnabled ? 'Silenciar sonido ambiental' : 'Activar sonido ambiental'
   );
-  buttonEl.classList.toggle('sound-toggle--on', enabled);
+  buttonEl.classList.toggle('sound-toggle--on', isEnabled);
 }
